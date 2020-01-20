@@ -5,14 +5,23 @@
   "main": "back.js",
   "scripts": {
     "server": "nodemon back.js",
-    "start": "node back.js"
+    "start": "node back.js",
+    "migrate:make": "knex migrate:make",
+    "migrate:latest": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
+    "seed:make": "knex seed:make",
+    "seed:run": "knex seed:run"
+    
   },
   "author": "Joelle Maximin <joelle.maximin@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "knex": "^0.20.8",
+    "morgan": "^1.9.1",
     "mysql": "^2.17.1",
     "router": "^1.3.3"
   },
