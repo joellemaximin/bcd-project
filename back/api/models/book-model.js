@@ -6,11 +6,20 @@ module.exports = {
   get,
   findById,
   remove,
-  update
+  update,
+  count
 };
 
-async function add(body) {
-  return db("books").insert(body);
+async function add(body, category_id) {
+  if(category_id){
+    return db("books")
+    .insert(body)
+    .innerJoin({ category_id })
+    .where(category_id)
+
+  }
+  
+   
 }
 
 function find() {
@@ -18,26 +27,22 @@ function find() {
 }
 
 function get(id,title) {
-  //what does this do?
+  //what does this do? U display the title with id by desc or asc
   if (id) {
     return db("books")
       .where({ id: Number(id) })
       .orderBy(title.asc(), title.desc());
+       
   } else {
     return db("books");
   }
 }
 
+//find a book by id
 function findById(id) {
   return db("books")
     .where({ id })
     .first();
-}
-
-function remove(id) {
-  return db("books")
-    .where({ id })
-    .del();
 }
 
 // add update to model
@@ -46,4 +51,16 @@ function update(id, changes) {
   return db("books")
     .where({ id })
     .update(changes);
+}
+
+//remove from db
+function remove(id) {
+  return db("books")
+    .where({ id })
+    .del();
+}
+
+function count(id){
+  return db("books")
+    .count({ id })
 }

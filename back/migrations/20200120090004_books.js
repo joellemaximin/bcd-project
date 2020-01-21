@@ -7,7 +7,6 @@ exports.up = function(knex) {
         table.string("author", 50);
         table.string("oeuvre", 100);
         table.string("title", 30);
-        table.string("collection");
     });
 };
 

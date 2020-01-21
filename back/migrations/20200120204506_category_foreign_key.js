@@ -1,7 +1,7 @@
-
 exports.up = function(knex) {
     return knex.schema.table("books", table => {
-        table.foreign("category_id").references("category.id");
+        table.foreign("category_id").unsigned()
+        .notNullable().references('id').inTable('category').onDelete('CASCADE').index();
     });
 };
 
