@@ -27,9 +27,12 @@ router.get("/", async (req, res) => {
 // post router
 router.post("/", async (req, res) => {
   try {
+
+
     const cate = await db.add(req.body);
     
-    res.status(200).json(cate, {message: "New category add"});
+    res.status(200).json({message: "New category " + cate.title + " add2"});
+   //res.status(200).json(cate, {message: "New category add"});
   } catch (error) {
     res.status(500).json(error);
   }

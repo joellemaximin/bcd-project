@@ -9,26 +9,26 @@ module.exports = {
 };
 
 async function add(body) {
-  return db("category").insert(body);
+  return db("categories").insert(body);
 }
 
 function find() {
-  return db("category");
+  return db("categories");
 }
 
 function get(id) {
   //what does this do? U display the title with id by desc or asc
   if (id) {
-    return db("category")
+    return db("categories")
       .where({ id: Number(id) })
   } else {
-    return db("category");
+    return db("categories");
   }
 }
 
 //find a cat by id
 function findById(id) {
-  return db("category")
+  return db("categories")
     .where({ id })
     .first();
 }
@@ -36,7 +36,7 @@ function findById(id) {
 // add update to model
 
 function update(id, changes) {
-  return db("category")
+  return db("categories")
     .where({ id })
     .update(changes);
 

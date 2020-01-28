@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models/book-model");
+const pool = require("../middleware/dbConnect")
 
 router.use(express.json());
 
@@ -28,8 +29,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const book = await db.add(req.body);
-    
-    res.status(200).json(book, {message: "New book add"});
+    res.status(200).json(book);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -50,14 +50,14 @@ router.get('/:id', async (req, res) => {
 });
 
 //display count books
-router.get('/counter', async (req, res) => {
-  try {
-    const count = await db.count(books);
-    res.status(200).json({message: "Number of books: ", count});
-  } catch (error) {
-    res.status(500).json(error);
-  }
+router.get("/counter/countBooks", async (req,res) => {
+  const countBooks = 'SELECT COUNT(*) FROM Books';
+  pool.query(countBooks, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
 
+  });
 })
 
 //update a book
@@ -88,14 +88,6 @@ router.delete('/delete/:id', async (req, res) => {
     }
 });
   
-  
-
-// router.get('/books', booksController.all);
-// router.post('/books', booksController.create);
-// router.get('/book/:id', booksController.get);
-// router.put('/book/:id', booksController.update);
-// router.delete('/book/:id', booksController.destroy);
-
 
 
 

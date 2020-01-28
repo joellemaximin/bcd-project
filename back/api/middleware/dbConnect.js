@@ -10,17 +10,17 @@ const pool = mysql.createConnection({
 })
 
 
-pool.getConnection((err, connection) => {
-    if(err) 
-        console.error("Something went wrong connecting to the database ...");
+// pool.getConnection((err, connection) => {
+//     if(err) 
+//         console.error("Something went wrong connecting to the database ...");
     
-    if(connection)
-        connection.release();
-    return;
-});
+//     if(connection)
+//         connection.release();
+//     return;
+// });
 
 
-pool.query = util.promisify(pool.query);
+// pool.query = util.promisify(pool.query);
 
 
 

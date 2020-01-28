@@ -6,18 +6,17 @@ module.exports = {
   get,
   findById,
   remove,
-  update,
-  count
+  update
 };
 
-async function add(body, category_id) {
-  if(category_id){
+async function add(body) {
+  // if(category_id){
     return db("books")
     .insert(body)
-    .innerJoin({ category_id })
-    .where(category_id)
+    // .innerJoin({ category_id })
+    // .where(category_id)
 
-  }
+  // }
   
    
 }
@@ -58,9 +57,4 @@ function remove(id) {
   return db("books")
     .where({ id })
     .del();
-}
-
-function count(id){
-  return db("books")
-    .count({ id })
 }
