@@ -9,38 +9,7 @@ const pool = require("./dbConnect")
 const bookRouter = require("../routes/book-router");
 const cateRouter = require("../routes/cate-router");
 const studentRouter = require("../routes/student-router");
-// const countStudents = require('../routes/student-router');
-// const countBooks = require('../routes/book-router');
-
-// pool.connect(function(err){
-//   if (err) throw err;
-//   console.log("Connected!");
-
-//   const countStudents = 'SELECT COUNT(*) FROM Students';
-//   pool.query(countStudents, function (err, result){
-//     if (err) throw err;
-//     console.log(result);
-//     result.send()
-//   });
-
-//   const countBooks = 'SELECT COUNT(*) FROM Books';
-//   pool.query(countBooks, function (err, result){
-//     if (err) throw err;
-//     console.log(result);
-//   });
-
-  // const countBookRead = 'SELECT COUNT(*) FROM X';
-  // pool.query(countBookRead, function (err, result){
-  //   if (err) throw err;
-  //   console.log(result);
-  // });
-// });
-
-// server.get("/api/students-count", (req, res)=>{
-//   res.send(countStudent, "<h2>Nombre deleves</h2>")
-
-// });
-
+const book_borrowed = require("../routes/book_borrowed-router");
 
 
 // exports
@@ -53,6 +22,7 @@ module.exports = server => {
   server.use("/api/bookrouter", bookRouter);
   server.use("/api/students", studentRouter);
   server.use("/api/categories", cateRouter);
+  server.use("/api/book_borrowed", book_borrowed);
 
   // catch 404 and forward to error handler
 

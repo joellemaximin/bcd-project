@@ -26,6 +26,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+//display only 8
+
+
+
 // post router
 router.post("/", async (req, res) => {
   try {
@@ -50,25 +54,7 @@ router.get('/student/:id', async (req, res) => {
   }
 });
 
-//display countStudents students
-// router.get('/countStudents', async (req, res) => {
-//   try {
-//     res.status(200).json(countStudents);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
 
-// })
-
-router.get("/counter/countStudents", async (req,res) => {
-    const countStudents = 'SELECT COUNT(*) FROM Students';
-    pool.query(countStudents, function (err, result){
-      if (err) throw err;
-      res.send(result);
-      console.log(result);
-
-    });
-})
 //update a student
 router.put('/student/:id', async (req, res) => {
     try {
@@ -96,9 +82,50 @@ router.delete('/student/delete/:id', async (req, res) => {
       res.status(500).json({message: "Student is not deleted"});
     }
 });
+
+
   
+//display countStudents students
+
+router.get("/counter/countStudents", async (req,res) => {
+    const countStudents = 'SELECT COUNT(*) FROM Students';
+    pool.query(countStudents, function (err, result){
+      if (err) throw err;
+      res.send(result);
+      console.log(result);
+
+    });
+})
+
+/////        FILTERS      //////
 
 
+//display students by name or grade
+
+router.get('/order/order_by_name', async (req, res)=>{
+    const order_name = 'SELECT name, grade FROM Students ORDER BY name';
+    pool.query(order_name, function (err, result){
+      if (err) throw err;
+      res.send(result);
+      console.log(result);
+  
+    });
+})
+
+
+
+
+//display the number of books readed by students 
+
+router.get('/order/order_by_first_letter', async (req, res)=>{
+    const order_name = "SELECT DISTINCT name FROM Students WHERE name LIKE = '?%' ";
+    pool.query(order_name, function (err, result){
+      if (err) throw err;
+      res.send(result);
+      console.log(result);
+  
+    });
+})
 
 
 module.exports = router;

@@ -49,16 +49,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-//display count books
-router.get("/counter/countBooks", async (req,res) => {
-  const countBooks = 'SELECT COUNT(*) FROM Books';
-  pool.query(countBooks, function (err, result){
-    if (err) throw err;
-    res.send(result);
-    console.log(result);
-
-  });
-})
 
 //update a book
 router.put('/:id', async (req, res) => {
@@ -89,7 +79,75 @@ router.delete('/delete/:id', async (req, res) => {
 });
   
 
+//display count books
+router.get("/counter/countBooks", async (req,res) => {
+  const countBooks = 'SELECT COUNT(*) FROM Books';
+  pool.query(countBooks, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+
+  });
+})
+
+//get book inner join or join category here
 
 
+
+/////        FILTERS      //////
+
+
+//display books by authors or name or first letter from column oeuvre and author or by category
+
+
+
+//display books asc or desc of the title
+router.get('/order/title-asc', async (req, res)=>{
+  const asc_title = 'SELECT title FROM Books ORDER BY title ASC';
+  pool.query(asc_title, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+
+  });
+})
+
+router.get('/order/title-desc', async (req, res)=>{
+  const desc_title = 'SELECT title FROM Books ORDER BY title DESC';
+  pool.query(desc_title, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+
+  });
+})
+
+//filter books oeuvre
+router.get('/order/oeuvres', async (req, res)=>{
+  const oeuvre = 'SELECT DISTINCT oeuvre FROM Books ORDER BY oeuvre';
+  pool.query(oeuvre, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+
+  });
+})
+
+//filter books author
+router.get('/order/author', async (req, res)=>{
+  const author = 'SELECT DISTINCT author FROM Books ORDER BY author';
+  pool.query(author, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+
+  });
+})
+
+
+
+
+
+// paginate router?
 
 module.exports = router;
