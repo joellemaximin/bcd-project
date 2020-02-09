@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable("books", table => {
+    return knex.schema.createTableIfNotExists("books", table => {
         table.increments("id").primary();
         table.string("editor");
         table.string("collection", 50);
@@ -11,5 +11,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable("books");
+    return knex.schema.dropTableIfExists("books");
 };

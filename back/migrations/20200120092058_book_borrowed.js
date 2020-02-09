@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable("book_borrowed", table => {
+    return knex.schema.createTableIfNotExists("book_borrowed", table => {
         table.increments("id").primary();
         table.datetime("start_date");
         table.datetime("end_date");
@@ -10,6 +10,6 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable("book_borrowed");
+    return knex.schema.dropTableIfExists("book_borrowed");
 
 };

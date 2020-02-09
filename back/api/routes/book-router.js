@@ -6,29 +6,21 @@ const pool = require("../middleware/dbConnect")
 router.use(express.json());
 
 // returns book in order
-router.get("/", async (req, res) => {
-  try {
-    const book = await db.find();
+router.get("/", async (req,res) => {
 
-    // book.sort(function(a, b) {
-    //   if (a.title < b.title) {
-    //     return -1;
-    //   }
-    //   if (a.title > b.title) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // });
-    res.status(200).json(book);
-  } catch (error) {
-    res.status(500).json(error.message);
-  }
-});
+  const joinCategory = 'SELECT * FROM books INNER JOIN categories ON books.`category_id`=categories.`id`';
+  pool.query(joinCategory, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+  })
+}); 
 
 // post router
 router.post("/", async (req, res) => {
   try {
     const book = await db.add(req.body);
+    console.log(req.body)
     res.status(200).json(book);
   } catch (error) {
     res.status(500).json(error);
@@ -48,6 +40,12 @@ router.get('/:id', async (req, res) => {
     res.status(500).json(error.message);
   }
 });
+
+
+
+// SELECT * FROM books INNER JOIN categories ON (book_id = categories.`category_id`);
+//SELECT * FROM categories LEFT JOIN books ON book_id = category_id'
+// SELECT books.`category_id`, books.`editor`, books.`collection`, books.`title`, books.`oeuvre` FROM books RIGHT JOIN categories ON (books.`category_id` = `category_id`;
 
 
 //update a book
@@ -91,6 +89,24 @@ router.get("/counter/countBooks", async (req,res) => {
 })
 
 //get book inner join or join category here
+
+
+
+// router.get("/", async (req,res) => {
+//   function cate(book) {
+//     Object.keys(book).forEach(function(bookk){
+//         const category = 'SELECT * FROM categories WHERE id = ' + book._id;
+//         pool.query(category, function (err, result){
+//             if (err) throw err;
+//             console.log("Book name: + ‘bookk.title‘+ categoryname; {category.category_title}")
+  
+//     })
+//     return;
+//             //     res.send(result);
+//     //   console.log(result);
+
+//     // 
+//   })};
 
 
 

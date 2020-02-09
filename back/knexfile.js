@@ -10,7 +10,10 @@ module.exports = {
         user: "root",
         password: ""
       },
-      debug: true
+      debug: true,
+      seeds: {
+        directory: './seeds/dev'
+    }
   },
 
   staging: {
