@@ -27,15 +27,6 @@ router.get("/get-allbook", async (req, res) => {
   }
 });
 
-router.get('/getdays/:id', async (req, res)=>{
-  const days_left = "SELECT timeleft FROM book_borrowed  WHERE Id= "  + req.params.id;
-  pool.query(days_left, function (err, result){
-    if (err) throw err;
-    res.send(result);
-    console.log(result);
-
-  });
-})
 
 
 router.post("/add_bookborrowed", async (req, res) => {

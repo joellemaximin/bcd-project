@@ -5,10 +5,10 @@ const pool = require("../middleware/dbConnect")
 
 router.use(express.json());
 
-// returns book in order
+// returns book in order by category and display only 15 books
 router.get("/", async (req,res) => {
 
-  const joinCategory = 'SELECT * FROM books INNER JOIN categories ON books.`category_id`=categories.`id`';
+  const joinCategory = 'SELECT * FROM books INNER JOIN categories ON books.`category_id`=categories.`id` LIMIT 0, 15';
   pool.query(joinCategory, function (err, result){
     if (err) throw err;
     res.send(result);
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 });
 
 //get one book
-router.get('/:id', async (req, res) => {
+router.get('/get/:id', async (req, res) => {
   try {
     const book = await db.findById(req.params.id);
     if(book) {
@@ -49,7 +49,7 @@ router.get('/:id', async (req, res) => {
 
 
 //update a book
-router.put('/:id', async (req, res) => {
+router.put('/edit-book/:id', async (req, res) => {
     try {
         const book = await db.update(req.params.id, req.body);
         if(book) {
@@ -90,8 +90,6 @@ router.get("/counter/countBooks", async (req,res) => {
 
 //get book inner join or join category here
 
-
-
 // router.get("/", async (req,res) => {
 //   function cate(book) {
 //     Object.keys(book).forEach(function(bookk){
@@ -114,7 +112,15 @@ router.get("/counter/countBooks", async (req,res) => {
 
 
 //display books by authors or name or first letter from column oeuvre and author or by category
+router.get('/order/oeuvres', async (req, res)=>{
+  const oeuvre = 'SELECT * FROM books WHERE title  oeuvre';
+  pool.query(oeuvre, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
 
+  });
+})
 
 
 //display books asc or desc of the title
@@ -160,8 +166,17 @@ router.get('/order/author', async (req, res)=>{
   });
 })
 
+//matched any characters from title column from a to z
 
+router.get('/ok/search-by-letter/?', async (req, res)=>{
+  const matched_character = "SELECT title FROM Books WHERE title REGEXP '^[^abcd]' ";
+  pool.query(matched_character, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
 
+  });
+})
 
 
 // paginate router?
