@@ -1,19 +1,52 @@
-import React, { Component } from 'react';
+import React, {useState, useEffect} from 'react';
+import {
+	Form,
+	FormGroup,
+	Label,
+	Input,
+	Button,
+	Table 
+} from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+
+
+const Book = (props)=> {
+	const [book, setBook] = useState([]);
+	const [showLoading, setShowLoading] = useState(true);
+	const [id, setId] = useState(book.title)
 
 
 
-class Book extends Component {
-  constructor(props) {
-    super(props)
-
-  }
-  render(){
+	//input search books
+// 	useEffect(() => {
+// 		const fetchBook = async () => {
+// 			fetch('/api/bookrouter/get')
+// 				.then(res => res.json())
+// 				.then(data => {
+// 					setBook(data)
+// 					setShowLoading(false)
+// 				})
+// 				.catch(err => {
+// 					console.log(err)
+// 				})
+// 		}
+// 		fetchBook();
+//   }, [id]);
+  
     return(
       <div className="navbar">
-        <h3>Afficher un livre</h3>
-      </div>
+			<Input
+				type='text'
+				value={id}
+				onChange={e => setId(e.target.value)}
+			
+			/>
+			<h2>{book.title}</h2>
+		</div> 
     )
-  }
+  
 }
 export default Book;
 

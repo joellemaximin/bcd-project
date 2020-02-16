@@ -1,216 +1,236 @@
-import React, {Component} from 'react';
-import { Form} from 'react-bootstrap'
+import React, { useState , useEffect} from 'react';
+import axios from 'axios';
+import FormControl from 'react-bootstrap/FormControl';
 import {
-    Col,
-    Input, 
-    FormGroup,
-    Label,
-    Button }
+  Col,
+  Input,
+  Form,
+  FormGroup,
+  Label,
+  Button }
 from 'reactstrap';
 
+const AddBook = () => {
+  
+	const [showLoading, setShowLoading] = useState(true);
+  // const [location, classes, history] = props;
+  const [inputs, setInputs] = useState(
+    {title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
+  );
+  const [categories, setCategory] = useState([]);
+  // const [value, setValue] = React.useState();
 
-class AddBook extends Component {
+  const handleInputChange = event => {
+    event.persist();
+    setInputs({
+      ...inputs,
+      [event.target.name]: event.target.value});
+  }
 
-    constructor(props){
-        super(props);
-        //setting up state
-        this.state = {
-            title: "",
-            collection: "",
-            author: "",
-            editor: "",
-            oeuvre: "",
-            category_id:""
-        }
-        this.submitBook = this.submitBook.bind(this)
-    }
+  const addBook = async (e) => {
+    e.preventDefault()
+    axios.post('/api/bookrouter', inputs,
+      {
+      validateStatus: function (status) {
+      return status < 600; // Reject only if the status code is greater than or equal to 500
+      }}
+    )
+    .catch(function (error) {
+      console.log(error)
+    })  
+    .then(function (response) {
+      console.log(response)
+    })
+  }
+  // const deleteBook = event => {
+  //   setShowLoading(true);
+  //   if (event) {
+  //     event.preventDefault();
+  //   }
+  // };
+ // console.log(inputs.category_id[title_category])
 
-    // handleInputChange = event => {
-    //     this.setState ({
-    //         [event.target.name]: event.target.value
-    //     })
-    // }
-    onChangeBook = (e) => {
-        this.setState({
-          [e.target.name]: e.target.value
-        })
-    }
+	
+	useEffect(() => {
+		const fetchBook = async () => {
+			setShowLoading(true)
+      fetch('/api/bookrouter/books/category')
+				.then(res => res.json())
+				.then(data => {
+					setCategory(data)
+					setShowLoading(false)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		}
+		fetchBook();
+	}, []);
 
-    submitBook = e => {
-        e.preventDefault();
 
-        const data = {
-            title: this.state.title,
-            collection: this.state.collection,
-            author: this.state.author,
-            editor: this.state.editor,
-            oeuvre: this.state.oeuvre,
-            category_id: this.state.category_id,
+return (
+  <div>
+    <Form onSubmit={addBook} >
+      <FormGroup  row>
+        <Label sm={2}>
+            Nom du livre
+        </Label>
+        <Col sm={6}>
+        <Input
+            type="text"
+            placeholder=".. titre"
+            value= {inputs.title || ""}
+            onChange={handleInputChange}
+            name="title"
+            required
+        />
+        </Col>
+      </FormGroup>
 
-        }
-        // for (let name of data.keys()) {
-        //     const name = form.elements[name];
-        // }
-        // if (!e.target.checkValidity()) {
-        //     this.setState({ displayErrors: true });
-        //     return;
-        //   }
-        //   this.setState({ displayErrors: false });
+      <FormGroup row>
+        <Label sm={2}>
+            Collection
+        </Label>
+        <Col sm={6}>
+        <Input
+          type="text"
+          placeholder=".. collection"
+          value={inputs.collection || ""}
+          onChange={handleInputChange}
+          name="collection"
+        />
+        </Col>
+      </FormGroup>
+
+      <FormGroup row>
+        <Label sm={2}>
+            Editeur
+        </Label>
+        <Col sm={6}>
+        <Input
+            type="text"
+            placeholder=".. éditeur"
+            value={inputs.editor || ""}
+            onChange={handleInputChange}
+            name="editor"
+        />
+        </Col>
+      </FormGroup>
+
+      <FormGroup row>
+        <Label sm={2}>
+            Auteur
+        </Label>
+        <Col sm={6}>
+        <Input
+          type="text"
+          placeholder=".. auteur"
+          value={inputs.author || ""}
+          onChange={handleInputChange}
+          name="author"
+        />
+        </Col>
+      </FormGroup>
+
+      <FormGroup row>
+        <Label sm={2}>
+            Genre
+        </Label>
+        <Col sm={6}>
+          {/* {categories.map((category, key) =>  */}
+
+          <FormControl 
+            as="select"
+            name="category_id"
+            value= {inputs.category_id || ""}
+            onChange={handleInputChange}
+          >
+            
+          {categories.map((category, id) => 
+						<option key={id} className="">{category.title_category}</option>
+          )}
           
-        fetch('/api/bookrouter', {
-            method: 'POST',
-            body: JSON.stringify(data), // data can be `string` or {object}!
+          </FormControl> 
 
-            headers:{ 'Content-Type': 'application/json' } })
-        
-            .then(res => res.json())
-        
-            .catch(error => console.error('Error:', error))
-        
-            .then(response => console.log('Success:', response));
-        
-        // const bookObject = {
-        //     title: this.state.title,
-        //     collection: this.state.collection,
-        //     author: this.state.author,
-        //     editor: this.state.editor,
-        //     oeuvre: this.state.oeuvre,
-        //     category_id: this.state.title
-        // };
-        // fetch.post('/api/bookrouter', bookObject)
-        // .then(response=>{
-        //     if (response.data.success===true) {
-        //       alert(response.data.message)
-        //     }
-        //     else {
-        //       alert(response.data.message)
-        //     }
-        //   }).catch(error=>{
-        //     alert("Error 34 "+error)
-        // })
-        // this.setState({ title: '', collection: '', author: '', editor: '', oeuvre: '', title_category: '' })
-    
+           {/*  type="select"
+            // name="category_id"
+              // <option key={categories.category_id}>{category.title_category}</option>
+            // )}
+            value={value || ""}
 
-    }
+            onChange={e => setValue(e.currentTarget.value)}
+            /> */}
+          
+        </Col> 
+      </FormGroup>
 
-    render(){
-        
-        console.log(this.state)
-        const { displayErrors } = this.state;
+      <FormGroup row>
+        <Label sm={2}>
+          Oeuvre
+        </Label>
+        <Col sm={6}>
+          <Input
+            type="text"
+            placeholder=".. oeuvre"
+            value={inputs.oeuvre || ""}
+            onChange={handleInputChange}
+            name="oeuvre"
+            />
+        </Col>
+      </FormGroup>
+      
 
-        
-        return (
-            <div className="add-form">
-                <Form action='/api/bookrouter' onSubmit={this.submitBook}
-                noValidate
-                className={displayErrors ? 'displayErrors' : ''}
+      <div className="submit_newbook">
+        <Button
+        className="waves-effect waves-light btn"
+        type="submit"
         >
-                    <FormGroup  row>
-                        <Label sm={2}>
-                            Nom du livre
-                        </Label>
-                        <Col sm={6}>
-                        <Input
-                            type="text"
-                            placeholder=".. titre"
-                            value={this.state.title}
-                            onChange={this.onChangeBook}
-                            name="title"
-                        />
-                        </Col>
-                    </FormGroup>
+        Ajouter un nouveau livre
+        </Button>
+      </div>
 
-                    <FormGroup row>
-                        <Label sm={2}>
-                            Collection
-                        </Label>
-                        <Col sm={6}>
-                        <Input
-                            type="text"
-                            placeholder=".. collection"
-                            value={this.state.collection}
-                            onChange={this.onChangeBook}
-                            name="collection"
-                        />
-                        </Col>
-                    </FormGroup>
-
-                    <FormGroup row>
-                        <Label sm={2}>
-                            Editeur
-                        </Label>
-                        <Col sm={6}>
-                        <Input
-                            type="text"
-                            placeholder=".. éditeur"
-                            value={this.state.editor}
-                            onChange={this.onChangeBook}
-                            name="editor"
-                        />
-                        </Col>
-                    </FormGroup>
-
-                    <FormGroup row>
-                        <Label sm={2}>
-                            Auteur
-                        </Label>
-                        <Col sm={6}>
-                        <Input
-                            type="text"
-                            placeholder=".. auteur"
-                            value={this.state.author}
-                            onChange={this.onChangeBook}
-                            name="author"
-                        />
-                        </Col>
-                    </FormGroup>
-
-                    <FormGroup row>
-                        <Label sm={2}>
-                            Genre
-                        </Label>
-                        <Col sm={6}>
-                            <Input 
-                                
-                                name="title_category" 
-                                value={this.state.category_id}
-                                onChange={this.onChangeBook}
-                            >
-                            </Input>
-                        </Col> 
-                    </FormGroup>
-
-                    <FormGroup row>
-                        <Label sm={2}>
-                            Oeuvre
-                        </Label>
-                        <Col sm={6}>
-                            <Input
-                                type="text"
-                                placeholder=".. oeuvre"
-                                value={this.state.oeuvre}
-                                onChange={this.onChangeBook}
-                                name="oeuvre"
-                                />
-                        </Col>
-                    </FormGroup>
-                    
-
-                    <div className="submit_newbook">
-                        <Button
-                        className="waves-effect waves-light btn"
-                        type="submit"
-                       >
-                        Ajouter un nouveau livre
-                        </Button>
-                    </div>
-
-                </Form>
-                
-            </div>
-        )
-    }
-
+    </Form>
+  </div>
+  )
 }
-
 export default AddBook;
+
+    // useEffect(() => { 
+    //   async const fetchBook = async () => {
+    //     fetch('/api/bookrouter', {
+    //       method: "POST",
+    //       body: JSON.stringify(book),
+    //       headers: {
+    //         Accept: "application/json",
+    //         "Content-Type": "application/json"
+    //       }
+    //     })
+    //     .then(res => res.json())
+    //     .then(data => {
+    //       setBook(data)
+    //       setShowLoading(false)
+    //     })
+    //     .catch(error =>
+    //     alert("Error server:" + error)
+    //     ); 
+    //   }
+    //   fetchBook();
+    // },  [book]);
+
+//     useEffect(() => {
+//       const fetchBook = async (body) => {
+//         const response = await fetch('/api/bookrouter', {
+//         method: "POST",
+//         body,
+//         headers: {
+//           // 'Accept': 'application/json',
+//           'Content-Type': 'application/json'
+//         }
+//         })
+//         const data = await response.json();
+//         if(!response.ok) {
+//           throw new Error(data)
+//         }
+//         setTitle(data);  // what comes back is set to a JS variable called 'data'
+
+

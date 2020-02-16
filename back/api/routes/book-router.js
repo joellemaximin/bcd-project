@@ -166,6 +166,15 @@ router.get('/order/author', async (req, res)=>{
   });
 })
 
+router.get('/books/category', async (req, res)=>{
+  const title_categoryColumn = 'SELECT title_category FROM categories';
+  pool.query(title_categoryColumn, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+
+  });
+})
 //matched any characters from title column from a to z
 
 router.get('/ok/search-by-letter/?', async (req, res)=>{

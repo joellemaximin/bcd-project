@@ -2,142 +2,136 @@ import React, { Component } from 'react';
 
 
 
-class EditBook extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      title: "",
-      collection: "",
-      author: "",
-      editor: "",
-      oeuvre: "",
-      title_category:""
-    }
+const EditBook = (props)=> {
+	const [book, setBook] = useState([]);
+	const [showLoading, setShowLoading] = useState(true);
 
-  }
-
-  componentDidMount(){
-    let bookId = this.props.params.id;
-    fetch('/api/bookrouter/get/'+bookId)
-      .then(res => {
-        if(res.data.sucess) {
-          const data = res.data.data[0]
-          this.setState({
-            dataBook: data,
-            bTitle: data.title,
-            bAuthor: data.author,
-            bEdition: data.editor,
-            bCollection: data.collection,
-            bTitleCategory: data.title_category,
-            bOeuvre: data.oeuvre
-          })
-          res.json()
-
-        } else {
-          alert("error")
-        }
+	useEffect(() => {
+		const fetchBook = async () => {
+      fetch('/api/bookrouter/edit-book/'+ id)
+      .then(res => res.json())
+      .then(data => {
+        setBook(data)
+        setShowLoading(false)
       })
       .catch(error =>
-       alert("Error server:" + error)
+        alert("Error server:" + error)
       );
+		}
+		fetchBook();
+	}, []);
+	// return {books, fetchBooks};
+
+
+  return(
+    <div className="edit-form">
+      <Form action='/api/bookrouter' onSubmit={handleSubmit}
       
-  }
-  render(){
-    let bookId = this.props.params.id;
+      >
+        <FormGroup  row>
+          <Label sm={2}>
+              Nom du livre
+          </Label>
+          <Col sm={6}>
+          <Input
+              type="text"
+              placeholder=".. titre"
+              value={book}
+              onChange={(e) => setBook(e.target.value)}
+              name="title"
+          />
+          </Col>
+        </FormGroup>
+  
+        <FormGroup row>
+          <Label sm={2}>
+              Collection
+          </Label>
+          <Col sm={6}>
+          <Input
+            type="text"
+            placeholder=".. collection"
+            value={book}
+            onChange={(e) => setBook(e.target.value)}
+            name="collection"
+          />
+          </Col>
+        </FormGroup>
+  
+        <FormGroup row>
+          <Label sm={2}>
+              Editeur
+          </Label>
+          <Col sm={6}>
+          <Input
+              type="text"
+              placeholder=".. éditeur"
+              value={book}
+              onChange={(e) => setBook(e.target.value)}
+              name="editor"
+          />
+          </Col>
+        </FormGroup>
+  
+        <FormGroup row>
+          <Label sm={2}>
+              Auteur
+          </Label>
+          <Col sm={6}>
+          <Input
+            type="text"
+            placeholder=".. auteur"
+            value={book}
+            onChange={(e) => setBook(e.target.value)}
+            name="author"
+          />
+          </Col>
+        </FormGroup>
+  
+        <FormGroup row>
+          <Label sm={2}>
+              Genre
+          </Label>
+          <Col sm={6}>
+            <Input 
+              
+              name="title_category" 
+              value={book}
+              onChange={(e) => setBook(e.target.value)}
+            >
+            </Input>
+          </Col> 
+        </FormGroup>
+  
+        <FormGroup row>
+          <Label sm={2}>
+            Oeuvre
+          </Label>
+          <Col sm={6}>
+            <Input
+              type="text"
+              placeholder=".. oeuvre"
+              value={book}
+              onChange={(e) => setBook(e.target.value)}
+              name="oeuvre"
+              />
+          </Col>
+        </FormGroup>
+        
+  
+        <div className="submit_newbook">
+          <Button
+          className="waves-effect waves-light btn"
+          type="sfubmit"
+          >
+          Modifier
+          </Button>
+        </div>
+  
+      </Form>
+    </div>
+  )
 
-    return(
-      <div className="edit-form">
-        <Form onSubmit={this.addBook}>
-            <FormGroup  row>
-                <Label sm={2}>
-                    Nom du livre
-                </Label>
-                <Col sm={6}>
-                <Input
-                    type="text"
-                    placeholder=".. titre"
-                    value={this.state.title}
-                    onChange={this.handleInputChange}
-                    name="title"
-                />
-                </Col>
-            </FormGroup>
-
-            <FormGroup row>
-                <Label sm={2}>
-                    Collection
-                </Label>
-                <Col sm={6}>
-                <Input
-                    type="text"
-                    placeholder=".. collection"
-                    value={this.state.collection}
-                    onChange={this.handleInputChange}
-                    name="collection"
-                />
-                </Col>
-            </FormGroup>
-
-            <FormGroup row>
-                <Label sm={2}>
-                    Auteur
-                </Label>
-                <Col sm={6}>
-                <Input
-                    type="text"
-                    placeholder=".. auteur"
-                    value={this.state.author}
-                    onChange={this.handleInputChange}
-                    name="author"
-                />
-                </Col>
-            </FormGroup>
-
-            <FormGroup row>
-                <Label sm={2}>
-                    Select
-                </Label>
-                <Col sm={6}>
-                    <Input type="select" name="category" >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </Input>
-                </Col>
-            </FormGroup>
-
-            <FormGroup row>
-                <Label sm={2}>
-                    Oeuvre
-                </Label>
-                <Col sm={6}>
-                    <Input
-                        type="text"
-                        placeholder=".. oeuvre"
-                        value={this.state.oeuvre}
-                        onChange={this.handleInputChange}
-                        name="oeuvre"
-                        />
-                </Col>
-            </FormGroup>
-            
-
-            <div className="submit_newbook">
-                <Button
-                className="waves-effect waves-light btn"
-                type="submit"
-                onClick={this.addBook}
-                >
-                Ajouter un nouveau livre
-                </Button>
-            </div>
-
-        </Form>
-      </div>
-    )
-  }
 }
 export default EditBook;
 

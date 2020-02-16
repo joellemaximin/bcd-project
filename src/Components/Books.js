@@ -1,125 +1,147 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-    Form,
-    FormGroup,
-    Label,
-    Input,
-    Button,
-    Table 
+	Form,
+	FormGroup,
+	Label,
+	Input,
+	Button,
+	Table 
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import Book from './Book';
+
+const Books = (props)=> {
+	const [books, setBook] = useState([]);
+	const [showLoading, setShowLoading] = useState(true);
+	const [error, setError] = React.useState(null);
+	
+	useEffect(() => {
+		const fetchBook = async () => {
+			setShowLoading(true)
+			fetch('/api/bookrouter')
+				.then(res => res.json())
+				.then(data => {
+					setBook(data)
+					setShowLoading(false)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		}
+		fetchBook();
+	}, []);
 
 
-class Books extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            books: []
-        }
-    }
 
-    // Fetch the book on first mount
-    componentDidMount() {
-        this.getList();
-    }
+	const deleteBook = (id) => {
+		setShowLoading(true);
+		const book =  { title: book.title, edition: book.edition, title_category: parseInt(book.title_category), oeuvre: book.oeuvre, author: book.author};
+		fetch.delete('/api/bookrouter/delete/' + props.id, book)
+			.then((res) => {res.json()
+				setShowLoading(false);
+				props.history.push('/')
+			})
+			.catch((error) => setShowLoading(false));
 
-    // Retrieves the book of items from the Express app
-    getList(){
-    let that = this;
-    fetch('/api/bookrouter')
-      .then(res => res.json())
-      .then(books =>
-       that.setState({books: books})
-    );
-    // .catch(error => console.log('erreurs me voilàà', error))
-  }
+		console.log('..update')
+	}
 
-    // editBook(){
-    //     console.log('..update')
-    // }
+	 // deleteBook(){
+	 //     console.log('..deleted')
+	 // }
+	// const showDetail = (id) =>{
+	// 	props.history.push({
+	// 		pathname: "/edit-book/"+ id
+	// 	}
 
-    // deleteBook(){
-    //     console.log('..deleted')
-    // }
+    if (books.showLoading) return <Spinner animation='border' role='status' >
+	<span className="sr-only">Chargement...</span>
+	</Spinner> 
+	return (
+		<div className="books-home">
+			
+			{/* {showLoading && <Spinner animation='border' role='status' >
+				<span className="sr-only">Chargement...</span>
+	</Spinner> } */}
+			
 
+			<Book/>
 
-    render(){
+			<Table striped bordered hover >
+				<thead>
+					<tr>
+						<th>Nom du livre</th>
+						<th>Edition</th>
+						<th>Autheur</th>
+						<th>Collection</th>
+						<th>Oeuvre</th>
+						<th>Categorie</th>
+						<th>
+						</th>
 
-        return (
-            <div className="books-home">  
-                <Table striped bordered hover >
-                    <thead dark>
-                        <tr>
-                            <th>Nom du livre</th>
-                            <th>Edition</th>
-                            <th>Autheur</th>
-                            <th>Collection</th>
-                            <th>Oeuvre</th>
-                            <th>Categorie</th>
-                            <th>
-                            </th>
+					</tr>
+				</thead>
+				<tbody>
+					{books.map((book, key) => 
+						<tr key={key} className="">
+							<td>{book.title}</td>
+							<td>{book.edition}</td>
+							<td>{book.author}</td>
+							<td>{book.collection}</td>
+							<td>{book.oeuvre}</td>
+							<td>{book.title_category}</td>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {this.state.books.map((item => 
-                        <tr key={item.id} className="booksList">
-                            <td>{item.title}</td>
-                            <td>{item.edition}</td>
-                            <td>{item.author}</td>
-                            <td>{item.collection}</td>
-                            <td>{item.oeuvre}</td>
-                            <td>{item.title_category}</td>
+							
+							<td>
+									<Link variant="outline-primary"
+									to={"/edit-book/"+book.id}
+							>
+							Edit
+							</Link>
+						</td>
+						<td>
+							<Button
+							variant="danger"
+							size="sm"
+							onClick={()=> {deleteBook(book.id)}}
+							>
+							Delete
+							</Button>
+						</td>
+					</tr>
 
-                            
-                            <td>
-                                <Link variant="outline-primary"
-                                to={"/edit-book/"+item.id}
-                            >
-                            Edit
-                            </Link>
-                        </td>
-                        <td>
-                            <Button
-                            variant="danger"
-                            size="sm"
-                            >
-                            Delete
-                            </Button>
-                        </td>
-                    </tr>
+					)
+					}
+					
+				</tbody>
+			</Table>
+		
+	     
+			{/* <Button
+					className="waves-effect waves-light btn"
+					onClick={this.addCategory}
+					>
+					Ajouter une category
+			</Button>
+			<Form>
+					<FormGroup>
+						<Label for="BookSearch">Search</Label>
+							<Input
+							type="search"
+							name="search"
+							id="BookSearch"
+							placeholder="search placeholder"
+							/>
+					</FormGroup>
+			</Form> */}
+			<h3>Liste des livres</h3>
 
-                    ))
-                    }
-                    
-                    </tbody>
-                </Table>
-         
-                
-                <Button
-                    className="waves-effect waves-light btn"
-                    onClick={this.addCategory}
-                    >
-                    Ajouter une category
-                </Button>
-                <Form>
-                    <FormGroup>
-                        <Label for="BookSearch">Search</Label>
-                            <Input
-                            type="search"
-                            name="search"
-                            id="BookSearch"
-                            placeholder="search placeholder"
-                            />
-                    </FormGroup>
-                </Form>
-                <h3>Liste des livres</h3>
-
-            </div>
-        
-        )
-    }
-
+		</div>
+	
+	)
+	 
 }
 
 export default Books;

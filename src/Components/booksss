@@ -1,0 +1,58 @@
+exports.up = function(knex, Promise) {
+    return knex.schema.hasTable("books").then((exists) => {
+        console.log('books exists', exists);
+        if(!exists){
+            return knex.schema.table('books', function(table){
+                table.integer("category_id").primary();
+                table.biginteger("category_idfk").unsigned()
+                .notNullable().references('id').inTable('categories').onDelete('CASCADE').index();
+            })
+        }
+        
+    });
+};
+
+exports.down = function(knex) {
+    return knex.schema.dropTable("books");
+
+};
+/////
+
+
+exports.up = function(knex) {
+    return knex.schema.table("book_borrowed", table => {
+        table.biginteger("student_id").unsigned()
+        .notNullable().references('id').inTable('students').onDelete('CASCADE').index();
+        table.biginteger("book_id").unsigned()
+        .notNullable().references('id').inTable('books').onDelete('CASCADE').index();
+           
+    
+    });
+     
+    
+};
+
+exports.down = function(knex) {
+    return knex.schema.table("book_borrowed", table => {
+        return knex.schema.dropTable("book_borrowed");
+    });
+};
+
+
+exports.up = function(knex, Promise) {
+    return knex.schema.table('book_borrowed', function(t) {
+        t.dropColumn('end_date');
+        t.timestamps(false, true);
+        t.datetime("returned_at", { precision: 6 });
+        t.dropColumn('numberOfDate');
+        t.integer("numberOfdays", 15);
+
+        
+    });
+};
+
+exports.down = function(knex, Promise) {
+    return Promise.all([
+        knex.schema.dropTableIfExists('book_borrowed')
+    ])
+};
