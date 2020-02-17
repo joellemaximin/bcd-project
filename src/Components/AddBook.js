@@ -15,7 +15,7 @@ const AddBook = () => {
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
-    {title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
+    {id: '', title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
   );
   const [categories, setCategory] = useState([]);
   // const [value, setValue] = React.useState();
@@ -42,13 +42,6 @@ const AddBook = () => {
       console.log(response)
     })
   }
-  // const deleteBook = event => {
-  //   setShowLoading(true);
-  //   if (event) {
-  //     event.preventDefault();
-  //   }
-  // };
- // console.log(inputs.category_id[title_category])
 
 	
 	useEffect(() => {
@@ -137,12 +130,17 @@ return (
             Genre
         </Label>
         <Col sm={6}>
-          {/* {categories.map((category, key) =>  */}
-
-          <FormControl 
+        <Input
+          type="text"
+          placeholder=".. mettre un SELECT"
+          value={inputs.category_id || ""}
+          onChange={handleInputChange}
+          name="category_id"
+        />
+          {/* <FormControl 
             as="select"
             name="category_id"
-            value= {inputs.category_id || ""}
+            value= {inputs.category_id || title}
             onChange={handleInputChange}
           >
             
@@ -150,16 +148,9 @@ return (
 						<option key={id} className="">{category.title_category}</option>
           )}
           
-          </FormControl> 
+          </FormControl>  */}
 
-           {/*  type="select"
-            // name="category_id"
-              // <option key={categories.category_id}>{category.title_category}</option>
-            // )}
-            value={value || ""}
-
-            onChange={e => setValue(e.currentTarget.value)}
-            /> */}
+          
           
         </Col> 
       </FormGroup>

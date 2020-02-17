@@ -13,17 +13,29 @@ class Navigation extends Component {
       <div className="navbar">
         <Nav defaultActiveKey="/" as="ul">
             <Nav.Item as="li">
-                <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/">Home</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
-                <Nav.Link eventKey="link-1" href="/addbook">Ajout Livre</Nav.Link>
+              <Nav.Link eventKey="link-1" href="/add-book">Ajout Livre</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
-                <Nav.Link eventKey="link-2" href="/students">Elèves</Nav.Link>
+              <Nav.Link eventKey="link-2" href="/students-list">Elèves</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
-                <Nav.Link eventKey="link-2" href="/addstudent">Ajout Elève</Nav.Link>
+              <Nav.Link eventKey="link-3" href="/add-student">Ajout Elève</Nav.Link>
             </Nav.Item>
+            <Nav.Item as="li">
+              <Nav.Link eventKey="link-4" href="/categories">Categories</Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li">
+              <Nav.Link eventKey="link-5" href="/add-categorie">Ajout Categorie</Nav.Link>
+            </Nav.Item>
+            {/* <Nav.Item as="li">
+                <Nav.Link eventKey="link-2" href="/edit-student">Elèves</Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li">
+                <Nav.Link eventKey="link-2" href="/edit-book">Ajout Elève</Nav.Link>
+            </Nav.Item> */}
         </Nav>
       </div>
     )

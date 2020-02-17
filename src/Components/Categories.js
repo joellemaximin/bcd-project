@@ -12,20 +12,19 @@ import {
 import { Link } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import Book from './Book';
 
-const Books = (props)=> {
-	const [books, setBook] = useState([]);
+const Categories = (props)=> {
+	const [categories, setCategory] = useState([]);
 	const [showLoading, setShowLoading] = useState(true);
 	const [error, setError] = React.useState(null);
 	
 	useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
-			fetch('/api/bookrouter')
+			fetch('/api/categories')
 				.then(res => res.json())
 				.then(data => {
-					setBook(data)
+					setCategory(data)
 					setShowLoading(false)
 				})
 				.catch(err => {
@@ -36,7 +35,7 @@ const Books = (props)=> {
 	}, []);
 
 
-  const editBook = (id) => {
+  const editCat = (id) => {
 		props.history.push({
 
 			pathname: '/edit/' + id
@@ -44,91 +43,52 @@ const Books = (props)=> {
 		});
 	}
 
-	const deleteBook = (id) => {
-		//setShowLoading(true);
-
-			axios.delete('/api/bookrouter/delete/book')
-     
-    .then((data) => {
-			setBook({data:id})
-
-			props.history.push({
-				pathname: "/"
-			})
-			console.log(data)
-			
-						
-		})
-		.catch(function (error) {
-			console.log(error)
-		}) 
-		
-	}
+	//pas de remove category
 	
 	// props.history.push({
-	// 	pathname: "/edit-book/"+ id
+	// 	pathname: "/edit-category/"+ id
 	// }
 	// const onChangeItemName = (itemId) => {
 	// 	setNotesDummyData(notesDummyData.filter(({ id }) => id !== itemId));
 	// };
 		
 
-	if (books.showLoading) return <Spinner animation='border' role='status' >
+	if (categories.showLoading) return <Spinner animation='border' role='status' >
 	<span className="sr-only">Chargement...</span>
 	</Spinner> 
 	return (
-		<div className="books-home">
+		<div className="categories-home">
 			
 			{/* {showLoading && <Spinner animation='border' role='status' >
 				<span className="sr-only">Chargement...</span>
 	</Spinner> } */}
 			
 
-			<Book/>
-
 			<Table striped bordered hover >
 				<thead>
 					<tr>
-						<th>Nom du livre</th>
-						<th>Edition</th>
-						<th>Autheur</th>
-						<th>Collection</th>
-						<th>Oeuvre</th>
-						<th>Categorie</th>
+						<th>Tittre de la catégorie</th>
+					
+						<th></th>
 						<th>
 						</th>
 
 					</tr>
 				</thead>
 				<tbody>
-					{books.map((book, key) => 
+					{categories.map((category, key) => 
 						<tr key={key} className="">
-							<td>{book.title}</td>
-							<td>{book.edition}</td>
-							<td>{book.author}</td>
-							<td>{book.collection}</td>
-							<td>{book.oeuvre}</td>
-							<td>{book.title_category}</td>
-
-							
+							<td>{category.title}</td>		
 						<td>
 							<Link variant="outline-primary"
-								to={"/edit-book/"+ book.id}
-								onClick={()=> {editBook(book)}}
+								to={"/edit-category/"+ category.id}
+								onClick={()=> {editCat(category)}}
 
 							>
 							Edit
 							</Link>
 						</td>
-						<td>
-							<Button
-							variant="danger"
-							size="sm"
-							onClick={()=> {deleteBook(book)}}
-							>
-							Delete
-							</Button>
-						</td>
+				
 					</tr>
 
 					)
@@ -163,4 +123,4 @@ const Books = (props)=> {
 	 
 }
 
-export default Books;
+export default Categories;

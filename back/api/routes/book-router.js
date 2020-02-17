@@ -63,19 +63,27 @@ router.put('/edit-book/:id', async (req, res) => {
 });
 
 //remove a book
-router.delete('/delete/:id', async (req, res) => {
-    try {
-        const book = await db.remove(req.params.id);
-        if(book) {
-            res.status(200).json({message: "Book deleted ."})
-        } else {
-            res.status(500).json({message: "Book is not found"})
-        }
-    } catch (error) {
-      res.status(500).json({message: "Book is not deleted"});
-    }
+router.delete('/delete/book', async (req, res) => {
+  var id = req.params.id
+  console.log(req.query)
+  const deleteBook = 'DELETE FROM books WHERE id =' + id;
+  pool.query(deleteBook, function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+  });
+   
 });
-  
+   // try {
+    //     const book = await db.remove(req.params.id);
+    //     if(book) {
+    //         res.status(200).json({message: "Book deleted ."})
+    //     } else {
+    //         res.status(500).json({message: "Book is not found"})
+    //     }
+    // } catch (error) {
+    //   res.status(500).json({message: "Book is not deleted"});
+    // }
 
 //display count books
 router.get("/counter/countBooks", async (req,res) => {
