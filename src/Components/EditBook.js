@@ -9,40 +9,59 @@ import {
   Label,
   Button }
 from 'reactstrap';
+import Spinner from 'react-bootstrap/Spinner';
 
-const EditBook = () => {
+const EditBook = (props) => {
   
-	const [showLoading, setShowLoading] = useState(true);
+	const [showLoading, setShowLoading] = useState(false);
   // const [location, classes, history] = props;
+  
   const [inputs, setInputs] = useState(
-    {title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
+    {bookID: '', title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
   );
-  const [categories, setCategory] = useState([]);
+  
+  const Url = "/api/bookrouter/edit-book/:id/" + props.match.params.id;
+
+  const [categories, setCategory] = useState({title_category: ''});
   // const [value, setValue] = React.useState();
 
+  // useEffect(() => {
+	// 	const fetchBook = async () => {
+	// 		setShowLoading(true)
+	// 		axios.put(Url)
+	// 			.then(res => res.json())
+	// 			.then(data => {
+  //         setInputs(data)
+  //         console.log(data)
+	// 				setShowLoading(false)
+	// 			})
+	// 			.catch(err => {
+	// 				console.log(err)
+	// 			})
+	// 	}
+	// 	fetchBook();
+	// }, []);
+
+
+
+  const editBook = async (e) => {
+    setShowLoading(true);
+    e.preventDefault()
+    const data = { bookID: props.match.params.id, title: inputs.title, collection: inputs.collection, author: inputs.author, oeuvre: inputs.oeuvre, category_id: inputs.category_id, editor: inputs.editor}
+    axios.put(Url, data)
+    .then((result) => {  
+      setShowLoading(false);
+      props.history.push('/')
+    }).catch((error) => setShowLoading(false)
+    )
+  }
+  
   const handleInputChange = event => {
     event.persist();
     setInputs({
       ...inputs,
       [event.target.name]: event.target.value});
   }
-
-  const editBook = async (e, id) => {
-    e.preventDefault()
-    axios.post('/api/bookrouter/edit'+ id, inputs,
-      {
-      validateStatus: function (status) {
-      return status < 600; // Reject only if the status code is greater than or equal to 500
-      }}
-    )
-    .catch(function (error) {
-      console.log(error)
-    })  
-    .then(function (response) {
-      console.log(response)
-    })
-  }
-
 	
 	useEffect(() => {
 		const fetchBook = async () => {
@@ -63,6 +82,11 @@ const EditBook = () => {
 
 return (
   <div>
+    {showLoading &&
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    }
     <Form onSubmit={editBook} >
       <FormGroup  row>
         <Label sm={2}>
@@ -133,7 +157,7 @@ return (
         <Input
           type="text"
           placeholder=".. mettre un SELECT"
-          value={inputs.category_id || ""}
+          categories={categories.title_category || ""}
           onChange={handleInputChange}
           name="category_id"
         />
@@ -175,8 +199,7 @@ return (
         <Button
         className="waves-effect waves-light btn"
         type="submit"
-        >
-        Modifier livre
+        > Enregistrer
         </Button>
       </div>
 

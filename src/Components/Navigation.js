@@ -1,16 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import { Nav } from 'react-bootstrap'
+import {
+  Nav }
+from 'react-bootstrap';
 
-
-class Navigation extends Component {
-  constructor(props) {
-    super(props)
-
-  }
-  render(){
-    return(
-      <div className="navbar">
+const Navigation = () => {
+  return(
+    <div className="navbar">
         <Nav defaultActiveKey="/" as="ul">
             <Nav.Item as="li">
               <Nav.Link href="/">Home</Nav.Link>
@@ -25,12 +21,12 @@ class Navigation extends Component {
               <Nav.Link eventKey="link-3" href="/add-student">Ajout Elève</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
-              <Nav.Link eventKey="link-4" href="/categories">Categories</Nav.Link>
+              <Nav.Link eventKey="link-4" href="/categories-list">Categories</Nav.Link>
             </Nav.Item>
-            <Nav.Item as="li">
+           {/*  <Nav.Item as="li">
               <Nav.Link eventKey="link-5" href="/add-categorie">Ajout Categorie</Nav.Link>
             </Nav.Item>
-            {/* <Nav.Item as="li">
+            <Nav.Item as="li">
                 <Nav.Link eventKey="link-2" href="/edit-student">Elèves</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
@@ -38,8 +34,7 @@ class Navigation extends Component {
             </Nav.Item> */}
         </Nav>
       </div>
-    )
-  }
+  )
 }
 export default Navigation;
 

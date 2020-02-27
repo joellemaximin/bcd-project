@@ -39,9 +39,9 @@ function get(id,title) {
 }
 
 //find a book by id
-function findById(id) {
+function findById(bookID) {
   return db("books")
-    .where({ id })
+    .where({ bookID })
     .first();
 }
 

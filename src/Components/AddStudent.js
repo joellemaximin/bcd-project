@@ -10,14 +10,13 @@ import {
   Button }
 from 'reactstrap';
 
-const AddStudent = () => {
+const AddStudent = (props) => {
   
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
     { name: '', age: '', grade: ''}
   );
-  const [students, setStudents] = useState([]);
   // const [value, setValue] = React.useState();
 
   const handleInputChange = event => {
@@ -39,32 +38,16 @@ const AddStudent = () => {
       console.log(error)
     })  
     .then(function (response) {
+      props.history.push('/students-list')  
       console.log(response)
     })
   }
-
-	
-	useEffect(() => {
-		const fetchBook = async () => {
-			setShowLoading(true)
-      fetch('/api/bookrouter/student')
-				.then(res => res.json())
-				.then(data => {
-					setStudents(data)
-					setShowLoading(false)
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		}
-		fetchBook();
-	}, []);
 
 
 return (
   <div>
     <Form onSubmit={addStudent} >
-      <FormGroup  row>
+      <FormGroup row>
         <Label sm={2}>
            Nom/Prénom
         </Label>

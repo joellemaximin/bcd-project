@@ -37,9 +37,7 @@ const Categories = (props)=> {
 
   const editCat = (id) => {
 		props.history.push({
-
-			pathname: '/edit/' + id
-	 
+			pathname: '/edit-cat/' + id
 		});
 	}
 
@@ -67,26 +65,28 @@ const Categories = (props)=> {
 			<Table striped bordered hover >
 				<thead>
 					<tr>
-						<th>Tittre de la catégorie</th>
-					
-						<th></th>
-						<th>
-						</th>
+						<th>Titre de la catégorie</th>
 
 					</tr>
 				</thead>
 				<tbody>
 					{categories.map((category, key) => 
 						<tr key={key} className="">
-							<td>{category.title}</td>		
+							<td>{category.title_category}</td>		
 						<td>
-							<Link variant="outline-primary"
-								to={"/edit-category/"+ category.id}
-								onClick={()=> {editCat(category)}}
-
+						<Button variant="outline-primary"
+								size="sm"
+								onClick={()=> {editCat(category.id)}}
 							>
 							Edit
-							</Link>
+						</Button>
+						<Button 
+						  variant="outline-primary"
+						  size="sm" 
+						  disabled
+						  >
+							Delete
+						</Button>
 						</td>
 				
 					</tr>
@@ -115,8 +115,7 @@ const Categories = (props)=> {
 							/>
 					</FormGroup>
 			</Form> */}
-			<h3>Liste des livres</h3>
-
+		
 		</div>
 	
 	)

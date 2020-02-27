@@ -9,9 +9,8 @@ import {
 	Button,
 	Table 
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+// import { Button } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
 import Book from './Book';
 
 const Books = (props)=> {
@@ -36,34 +35,52 @@ const Books = (props)=> {
 	}, []);
 
 
-  const editBook = (id) => {
+    const editBook = (id) => {
 		props.history.push({
-
-			pathname: '/edit/' + id
-	 
+			pathname: '/edit-book/' + id
 		});
 	}
 
-	const deleteBook = (id) => {
+    const displayBook = (id) => {
+		props.history.push({
+			pathname: '/book/' + id
+		});
+	}
+
+	const deleteBook = async (id) => {
+		const delteUrl = '/api/bookrouter/delete/book/' + id;
+
 		//setShowLoading(true);
 
-			axios.delete('/api/bookrouter/delete/book')
-     
-    .then((data) => {
-			setBook({data:id})
+		axios.delete(delteUrl)
+			.then((result) => {  
+				props.history.push('/')  
+				console.log(result)
 
-			props.history.push({
-				pathname: "/"
-			})
-			console.log(data)
-			
-						
-		})
-		.catch(function (error) {
-			console.log(error)
-		}) 
+			});
 		
 	}
+
+	// const updateProduct = (e) => {
+
+	// 	setShowLoading(true);
+	 
+	// 	e.preventDefault();
+	 
+	// 	const data = { prod_name: product.prod_name, prod_desc: product.prod_desc, prod_price: parseInt(product.prod_price) };
+	 
+	// 	axios.put(apiUrl, data)
+	 
+	// 	 .then((result) => {
+	 
+	// 		setShowLoading(false);
+	 
+	// 		props.history.push('/show/' + result.data._id)
+	 
+	// 	 }).catch((error) => setShowLoading(false));
+	 
+	// };
+	 
 	
 	// props.history.push({
 	// 	pathname: "/edit-book/"+ id
@@ -89,6 +106,8 @@ const Books = (props)=> {
 			<Table striped bordered hover >
 				<thead>
 					<tr>
+					<th>ID:</th>
+
 						<th>Nom du livre</th>
 						<th>Edition</th>
 						<th>Autheur</th>
@@ -103,6 +122,7 @@ const Books = (props)=> {
 				<tbody>
 					{books.map((book, key) => 
 						<tr key={key} className="">
+							<td>{book.bookID}</td>
 							<td>{book.title}</td>
 							<td>{book.edition}</td>
 							<td>{book.author}</td>
@@ -112,27 +132,35 @@ const Books = (props)=> {
 
 							
 						<td>
-							<Link variant="outline-primary"
-								to={"/edit-book/"+ book.id}
-								onClick={()=> {editBook(book)}}
-
+							<Button variant="outline-primary"
+								// to={"/edit-book/"+ book.id}
+								size="sm"
+								onClick={()=> {editBook(book.bookID)}}
 							>
 							Edit
-							</Link>
+							</Button>
+						</td>
+						<td>
+							<Button variant="outline-primary"
+								// to={"/edit-book/"+ book.id}
+								size="sm"
+								onClick={()=> {displayBook(book.bookID)}}
+							>
+							Afficher
+							</Button>
 						</td>
 						<td>
 							<Button
 							variant="danger"
 							size="sm"
-							onClick={()=> {deleteBook(book)}}
+							onClick={()=> {deleteBook(book.bookID)}}
 							>
 							Delete
 							</Button>
 						</td>
 					</tr>
 
-					)
-					}
+					)}
 					
 				</tbody>
 			</Table>

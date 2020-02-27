@@ -6,9 +6,10 @@ const pool = require("../middleware/dbConnect")
 router.use(express.json());
 
 // returns book in order by category and display only 15 books
+// SELECT * FROM books INNER JOIN categories ON books.`category_id`=categories.`id` LIMIT 0, 15
 router.get("/", async (req,res) => {
-
-  const joinCategory = 'SELECT * FROM books INNER JOIN categories ON books.`category_id`=categories.`id` LIMIT 0, 15';
+  // SELECT books.`bookID`, `categories`.`title_category` from books INNER JOIN categories ON books.`category_id`=categories.`id` LIMIT 0, 15
+  const joinCategory = 'SELECT books.*, categories.`title_category` from books INNER JOIN categories ON books.`category_id` = categories.`id` LIMIT 0, 15';
   pool.query(joinCategory, function (err, result){
     if (err) throw err;
     res.send(result);
@@ -18,17 +19,23 @@ router.get("/", async (req,res) => {
 
 // post router
 router.post("/", async (req, res) => {
-  try {
-    const book = await db.add(req.body);
-    console.log(req.body)
-    res.status(200).json(book);
-  } catch (error) {
-    res.status(500).json(error);
-  }
+  var postData  = req.body;
+  pool.query('INSERT INTO books SET ?', postData, function (error, results, fields) {
+    if (error) throw error;
+    res.end(JSON.stringify(results));
+  });
+ 
+  // try {
+  //   const book = await db.add(req.body);
+  //   console.log(req.body)
+  //   res.status(200).json(book);
+  // } catch (error) {
+  //   res.status(500).json(error);
+  // }
 });
 
 //get one book
-router.get('/get/:id', async (req, res) => {
+router.get('/book/:id', async (req, res) => {
   try {
     const book = await db.findById(req.params.id);
     if(book) {
@@ -51,7 +58,7 @@ router.get('/get/:id', async (req, res) => {
 //update a book
 router.put('/edit-book/:id', async (req, res) => {
     try {
-        const book = await db.update(req.params.id, req.body);
+        const book = await db.update(req.params.id);
         if(book) {
             res.status(200).json(book)
         } else {
@@ -63,16 +70,21 @@ router.put('/edit-book/:id', async (req, res) => {
 });
 
 //remove a book
-router.delete('/delete/book', async (req, res) => {
-  var id = req.params.id
-  console.log(req.query)
-  const deleteBook = 'DELETE FROM books WHERE id =' + id;
-  pool.query(deleteBook, function (err, result){
-    if (err) throw err;
-    res.send(result);
-    console.log(result);
-  });
-   
+router.delete('/delete/book/:id', (req, res) => {
+  // var bookID = req.params.id
+  // const deleteBook = ;
+  // console.log("bookID: ", req.params.bookID);
+  pool.query('DELETE FROM books WHERE bookID = ?', [req.params.id], (err,rows, fields) =>{
+    console.log(req.params.id, 'EEeeeeeeee')
+    if (!err) 
+    res.send('deleted success')
+    else 
+    console.log(err)
+
+  }
+
+  );
+
 });
    // try {
     //     const book = await db.remove(req.params.id);
@@ -90,10 +102,14 @@ router.get("/counter/countBooks", async (req,res) => {
   const countBooks = 'SELECT COUNT(*) FROM Books';
   pool.query(countBooks, function (err, result){
     if (err) throw err;
-    res.send(result);
-    console.log(result);
+    res.json(result);
+
 
   });
+  req.flash('success', 'Project Deleted');
+  res.location('/admin');
+  res.redirect('/admin');
+  console.log(result);
 })
 
 //get book inner join or join category here
@@ -175,7 +191,7 @@ router.get('/order/author', async (req, res)=>{
 })
 
 router.get('/books/category', async (req, res)=>{
-  const title_categoryColumn = 'SELECT title_category FROM categories';
+  const title_categoryColumn = 'SELECT categories.`title_category` from books INNER JOIN categories ON books.`category_id` = categories.`id` ';
   pool.query(title_categoryColumn, function (err, result){
     if (err) throw err;
     res.send(result);

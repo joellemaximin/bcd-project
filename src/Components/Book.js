@@ -15,7 +15,7 @@ import { withRouter } from 'react-router-dom';
 const Book = (props)=> {
 	const [book, setBook] = useState([]);
 	const [showLoading, setShowLoading] = useState(true);
-	const [id, setId] = useState(book.title)
+	const [searchTerm, setSearch] = useState('')
 
 
 
@@ -38,7 +38,7 @@ const Book = (props)=> {
     return(
       <div className="navbar">
 			<Input
-				type='text'
+				type='search'
 				value={id}
 				onChange={e => setId(e.target.value)}
 			

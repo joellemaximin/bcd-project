@@ -10,14 +10,15 @@ import {
   Button }
 from 'reactstrap';
 
-const AddBook = () => {
+const AddBook = (props) => {
   
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
-    {id: '', title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
+    {title: '', collection: '', author: '', oeuvre: '', editor: ''}
   );
-  const [categories, setCategory] = useState([]);
+  //  title_category: '', , category_id: ''
+  //const [categories, setCategory] = useState([]);
   // const [value, setValue] = React.useState();
 
   const handleInputChange = event => {
@@ -39,26 +40,27 @@ const AddBook = () => {
       console.log(error)
     })  
     .then(function (response) {
+      props.history.push('/')
       console.log(response)
     })
   }
 
 	
-	useEffect(() => {
-		const fetchBook = async () => {
-			setShowLoading(true)
-      fetch('/api/bookrouter/books/category')
-				.then(res => res.json())
-				.then(data => {
-					setCategory(data)
-					setShowLoading(false)
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		}
-		fetchBook();
-	}, []);
+	// useEffect(() => {
+	// 	const fetchBook = async () => {
+	// 		setShowLoading(true)
+  //     fetch('/api/bookrouter/books/category')
+	// 			.then(res => res.json())
+	// 			.then(data => {
+	// 				setCategory(data)
+	// 				setShowLoading(false)
+	// 			})
+	// 			.catch(err => {
+	// 				console.log(err)
+	// 			})
+	// 	}
+	// 	fetchBook();
+	// }, []);
 
 
 return (
@@ -69,6 +71,14 @@ return (
             Nom du livre
         </Label>
         <Col sm={6}>
+        {/* <Input
+            type="integer"
+            placeholder=".. N°"
+            value= {inputs.id || ""}
+            onChange={handleInputChange}
+            name="id"
+            
+        /> */}
         <Input
             type="text"
             placeholder=".. titre"
@@ -129,30 +139,24 @@ return (
         <Label sm={2}>
             Genre
         </Label>
-        <Col sm={6}>
-        <Input
-          type="text"
-          placeholder=".. mettre un SELECT"
-          value={inputs.category_id || ""}
-          onChange={handleInputChange}
-          name="category_id"
-        />
-          {/* <FormControl 
+        {/* <Col sm={6}>
+   
+          <FormControl 
             as="select"
             name="category_id"
-            value= {inputs.category_id || title}
+            value= {inputs.category_id || ""}
             onChange={handleInputChange}
           >
             
-          {categories.map((category, id) => 
-						<option key={id} className="">{category.title_category}</option>
+          {categories.map((category, key) => 
+						<option key={key} className="">{category.title_category}</option>
           )}
           
-          </FormControl>  */}
+          </FormControl>  
 
           
           
-        </Col> 
+        </Col>  */}
       </FormGroup>
 
       <FormGroup row>

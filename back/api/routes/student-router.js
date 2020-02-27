@@ -56,9 +56,9 @@ router.get('/student/:id', async (req, res) => {
 
 
 //update a student
-router.put('/student/:id', async (req, res) => {
+router.put('/edit-student/:id', async (req, res) => {
     try {
-        const student = await db.update(req.params.id, req.body);
+        const student = await db.update(req.params.id);
         if(student) {
             res.status(200).json(student)
         } else {
@@ -70,7 +70,7 @@ router.put('/student/:id', async (req, res) => {
 });
 
 //remove a student
-router.delete('/student/delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
     try {
         const student = await db.remove(req.params.id);
         if(student) {

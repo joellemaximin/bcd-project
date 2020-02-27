@@ -1,15 +1,15 @@
 const db = require("../../data/dbConfig");
 
 module.exports = {
- add,
+//  add,
  find,
  findById
 };
 
 
-async function add(body) {
-    return db("book_borrowed").insert(body);
-}
+// async function add(body) {
+//     return db("book_borrowed").insert(body);
+// }
 
 function find() {
     return db("book_borrowed");
@@ -20,4 +20,3 @@ function findById(id) {
       .where({id})
       .first()
 }
-

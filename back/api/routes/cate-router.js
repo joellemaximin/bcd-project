@@ -51,17 +51,17 @@ router.get('/:id', async (req, res) => {
 });
 
 //update a cate
-router.put('/:id', async (req, res) => {
-    try {
-        const cate = await db.update(req.params.id, req.body);
-        if(cate) {
-            res.status(200).json(cate)
-        } else {
-            res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
-        }
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
+router.put('/edit-cat/:id', async (req, res) => {
+  try {
+      const cate = await db.update(req.params.id);
+      if(cate) {
+          res.status(200).json(cate)
+      } else {
+          res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
+      }
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
 });
 
 

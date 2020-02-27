@@ -10,15 +10,29 @@ import {
   Button }
 from 'reactstrap';
 
-const EditStudent = () => {
+const EditStudent = (props) => {
   
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
     { name: '', age: '', grade: ''}
   );
-  const [students, setStudents] = useState([]);
   // const [value, setValue] = React.useState();
+
+	useEffect(() => {
+    setShowLoading(true)
+    const id = props.match.params.id
+    axios.get('/api/students/student/' + id)
+      .then(res => {
+        console.log(res.inputs)
+        setInputs(res.inputs)
+        setShowLoading(false)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },[]
+  );
 
   const handleInputChange = event => {
     event.persist();
@@ -28,37 +42,20 @@ const EditStudent = () => {
   }
 
   const editStudent = async (e) => {
-    // e.preventDefault()
-    // axios.post('/api/students', inputs,
-    //   {
-    //   validateStatus: function (status) {
-    //   return status < 600; // Reject only if the status code is greater than or equal to 500
-    //   }}
-    // )
-    // .catch(function (error) {
-    //   console.log(error)
-    // })  
-    // .then(function (response) {
-    //   console.log(response)
-    // })
+    e.preventDefault()
+    const id = props.match.params.id
+    axios.put('/api/student' + id, inputs)
+      .then(res => {
+        console.log(res.data)
+        props.history.push('/student-list')
+      })
+      .catch(function (error) {
+        console.log(error)
+      })  
+    
   }
 
 	
-	useEffect(() => {
-	// 	const fetchBook = async () => {
-	// 		setShowLoading(true)
-    //   fetch('/api/bookrouter/student')
-	// 			.then(res => res.json())
-	// 			.then(data => {
-	// 				setStudents(data)
-	// 				setShowLoading(false)
-	// 			})
-	// 			.catch(err => {
-	// 				console.log(err)
-	// 			})
-	// 	}
-	// 	fetchBook();
-	}, []);
 
 
 return (
