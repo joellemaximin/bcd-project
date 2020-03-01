@@ -11,62 +11,36 @@ import {
 } from 'reactstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import { useParams } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 // // import { Button } from 'react-router-dom';
 
-function BookUnique({ bookId, props}) {
-	const [{title, collection, author, oeuvre,editor, categoryId}, setBook] = useState({title: '', collection: '', author: '', oeuvre: '', categoryId: '', editor: ''});
+function BookUnique({match, props}) {
+	// const [{title, collection, author, oeuvre,editor, categoryId}, setBook] = useState({title: '', collection: '', author: '', oeuvre: '', categoryId: '', editor: ''});
 	const [showLoading, setShowLoading] = useState(true);
 	const [error, setError] = React.useState(null);
-	// let { id } = useParams();
-	// const [books, setBook] = useState([]);
-	// const url = `/api/bookrouter/book/` + props.match.params.id;
+	let id = match.params.id
+	const [book, setBook] = useState([]);
 
-// 	// const url = '/api/bookrouter'
-	// useEffect(() => {
-	// 	async function fetchData() {
-	// 		const response = await axios(`/api/bookrouter/book/${bookId}`);
-	// 		setBook(response);
-	// 	  }
-	// 	  fetchData();
-	// }, []);
-	// 		axios
-	// 		  .get('/api/bookrouter/book/')
-	// 			.then(res => {
-	// 				console.log(res)
-	// 				setBook(res.data)
-	// 			})
-	// 			.catch(err => {
-	// 				console.log(err)
-	// 			})
-	// }, []);
-	// const getbook = async (id) => {
-	// 	const book = '/api/bookrouter/book/' + id;
 
-	// 	//setShowLoading(true);
 
-	// 	axios.get(book)
-	// 		.then((result) => {  
-	// 			console.log(result)
-
-	// 		});
-		
-	// }
+	
 	useEffect(() => {
-		async function getBook(bookID) {
-		  const resp = await axios(`/api/bookrouter/book/${bookID}`)
-		  const data = await resp.json();
-		  setBook({title: data.title, collection: data.collection, author: data.author, oeuvre: data.oeuvre, editor: data.editor, categoryId: data.category_id})
+		async function fetchBook() {
+		  const response = await fetch(`/api/bookrouter/book/${id}`)
+			const data = await response.json();
+			console.log(data.bookID)
+		  setBook(data)
 		}
 	
-		getBook();
-	}, [bookId]);
+		fetchBook();
+	}, [id]);
 
-	// const editBook = (id) => {
-	// 	props.history.push({
-	// 		pathname: '/edit-book/' + id
-	// 	});
-	// }
+	const editBook = (id) => {
+		props.history.push({
+			pathname: '/edit-book/' + id
+		});
+	}
 
 
 	const returnBook = () => {
@@ -75,46 +49,25 @@ function BookUnique({ bookId, props}) {
 		});
 	}
 
-	// const uniquebook = booker.map(
-	// 	(book, bookID) => <li key={bookID}>{book.title}</li>
-	// );
-	console.log(title)
+
 	return (
 
 		<div className="books-home">
-			{showLoading &&
+			{/* {showLoading &&
 				<Spinner animation="border" role="status">
 					<span className="sr-only">Loading...</span>
 				</Spinner>
-			}
-			<p>{title}</p>
-			<p>{collection}</p>
-			<p>{author}</p>
-			<p>{oeuvre}</p>
+			} */}
 
-			{/* {book.data && book.data.map((book, i) => 
-			  <div>{book.bookID}</div>)}
-
-					 */}
-			
-		
-      {/* <ul style={{ border: "1px black solid" }}>
-				{books.data && books.data.map((book,key) => (
-				<li key={key} >
-					<h2>Nom du livre: </h2>
+		  {book && (
+				<div>
 					<p>{book.title}</p>
-					<h2>Edition: </h2>
-						<p>{book.edition}</p>
-					<h2>Auheur:</h2>
-						<p>{book.author}</p>
-					<h2>Collection:</h2>
-						<p>{book.collection}</p>
-					<h2>Oeuvre</h2>
-						<p>{book.oeuvre}</p>
-					<h2>Categorie:</h2>
-						<p>{book.title_category}</p>
-					<h2>Action</h2>
-
+					<p>{book.collection}</p>
+					<p>{book.editor}</p>
+					<p>{book.author}</p>
+					<p>{book.oeuvre}</p>
+					<p>{book.category_id}</p>
+					
 					<Button variant="outline-primary"
 						// to={"/edit-book/"+ book.id}
 						size="sm"
@@ -123,11 +76,10 @@ function BookUnique({ bookId, props}) {
 					Editer
 					</Button>
 				
+				</div>
+      )}
 
 		
-			  </li>
-			))}
-			</ul>  */}
 
 			<Button
 				variant="default"
