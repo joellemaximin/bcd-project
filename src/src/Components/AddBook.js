@@ -15,11 +15,11 @@ const AddBook = (props) => {
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
-    {title: '', collection: '', author: '', oeuvre: '', editor: ''}
+    {title: '', collection: '', author: '', oeuvre: '', editor: '', category_id: ''}
   );
   //  title_category: '', , category_id: ''
-  //const [categories, setCategory] = useState([]);
-  // const [value, setValue] = React.useState();
+  const [categories, setCategory] = useState([]);
+  const [value, setValue] = useState();
 
   const handleInputChange = event => {
     event.persist();
@@ -46,21 +46,22 @@ const AddBook = (props) => {
   }
 
 	
-	// useEffect(() => {
-	// 	const fetchBook = async () => {
-	// 		setShowLoading(true)
-  //     fetch('/api/bookrouter/books/category')
-	// 			.then(res => res.json())
-	// 			.then(data => {
-	// 				setCategory(data)
-	// 				setShowLoading(false)
-	// 			})
-	// 			.catch(err => {
-	// 				console.log(err)
-	// 			})
-	// 	}
-	// 	fetchBook();
-	// }, []);
+	useEffect(() => {
+		const fetchBook = async () => {
+			setShowLoading(true)
+      fetch('/api/bookrouter/books/category')
+				.then(res => res.json())
+				.then(data => {
+          setShowLoading(false)
+          // console.log(data)
+					setCategory(data)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		}
+		fetchBook();
+	}, []);
 
 
 return (
@@ -71,14 +72,6 @@ return (
             Nom du livre
         </Label>
         <Col sm={6}>
-        {/* <Input
-            type="integer"
-            placeholder=".. N°"
-            value= {inputs.id || ""}
-            onChange={handleInputChange}
-            name="id"
-            
-        /> */}
         <Input
             type="text"
             placeholder=".. titre"
@@ -139,24 +132,25 @@ return (
         <Label sm={2}>
             Genre
         </Label>
-        {/* <Col sm={6}>
+        <Col sm={6}>
    
           <FormControl 
             as="select"
             name="category_id"
-            value= {inputs.category_id || ""}
+            // value={inputs.category_id|| ""}
+            // value={category.id} 
             onChange={handleInputChange}
           >
             
           {categories.map((category, key) => 
-						<option key={key} className="">{category.title_category}</option>
+						<option value={category.id}  key={key} className="" >{category.title_category}</option>
           )}
           
           </FormControl>  
 
           
           
-        </Col>  */}
+        </Col> 
       </FormGroup>
 
       <FormGroup row>

@@ -47,9 +47,9 @@ function findById(bookID) {
 
 // add update to model
 
-function update(id, changes) {
+function update(bookID, changes) {
   return db("books")
-    .where({ id })
+    .where({ bookID })
     .update(changes);
 }
 

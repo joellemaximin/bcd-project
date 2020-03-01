@@ -12,20 +12,22 @@ import {
 // import { Button } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import Book from './Book';
+// import SwitchButtons from './SwitchButton'
 
 const Books = (props)=> {
 	const [books, setBook] = useState([]);
 	const [showLoading, setShowLoading] = useState(true);
-	const [error, setError] = React.useState(null);
-	
+	// const [error, setError] = React.useState(null);
+	const [counter, setCounter] = useState([]);
+
 	useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
-			fetch('/api/bookrouter')
+			fetch('/api/bookrouter/')
 				.then(res => res.json())
 				.then(data => {
-					setBook(data)
 					setShowLoading(false)
+					setBook(data)
 				})
 				.catch(err => {
 					console.log(err)
@@ -35,12 +37,15 @@ const Books = (props)=> {
 	}, []);
 
 
+
+
     const editBook = (id) => {
 		props.history.push({
 			pathname: '/edit-book/' + id
 		});
 	}
 
+ 
     const displayBook = (id) => {
 		props.history.push({
 			pathname: '/book/' + id
@@ -61,48 +66,42 @@ const Books = (props)=> {
 		
 	}
 
-	// const updateProduct = (e) => {
-
-	// 	setShowLoading(true);
-	 
-	// 	e.preventDefault();
-	 
-	// 	const data = { prod_name: product.prod_name, prod_desc: product.prod_desc, prod_price: parseInt(product.prod_price) };
-	 
-	// 	axios.put(apiUrl, data)
-	 
-	// 	 .then((result) => {
-	 
-	// 		setShowLoading(false);
-	 
-	// 		props.history.push('/show/' + result.data._id)
-	 
-	// 	 }).catch((error) => setShowLoading(false));
-	 
-	// };
-	 
+	function getCount() {
+		setShowLoading(true)
+		fetch('/api/bookrouter/counter/countBooks')
+		.then(res => res.json())
+		.then(data => {
+			// console.log(data)
+			setCounter(data)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+	}
 	
-	// props.history.push({
-	// 	pathname: "/edit-book/"+ id
-	// }
-	// const onChangeItemName = (itemId) => {
-	// 	setNotesDummyData(notesDummyData.filter(({ id }) => id !== itemId));
-	// };
-		
 
-	if (books.showLoading) return <Spinner animation='border' role='status' >
-	<span className="sr-only">Chargement...</span>
-	</Spinner> 
+	useEffect(() => {
+		getCount()
+	}, [])
+
+
 	return (
 		<div className="books-home">
 			
-			{/* {showLoading && <Spinner animation='border' role='status' >
-				<span className="sr-only">Chargement...</span>
-	</Spinner> } */}
+			{showLoading && <Spinner animation='border' role='status' >
+				<span className="sr-only"
+				
+				>Chargement...</span>
+			</Spinner> } 
 			
 
 			<Book/>
 
+			{/* <SwitchButtons /> */}
+
+			<h3>Liste des livres: {counter} </h3>
+
+			
 			<Table striped bordered hover >
 				<thead>
 					<tr>
@@ -183,7 +182,6 @@ const Books = (props)=> {
 							/>
 					</FormGroup>
 			</Form> */}
-			<h3>Liste des livres</h3>
 
 		</div>
 	

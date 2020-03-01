@@ -13,57 +13,40 @@ import Spinner from 'react-bootstrap/Spinner';
 
 const EditBook = (props) => {
   
-	const [showLoading, setShowLoading] = useState(false);
+	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   
   const [inputs, setInputs] = useState(
     {bookID: '', title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
   );
   
-  const Url = "/api/bookrouter/edit-book/:id/" + props.match.params.id;
+  const Url = '/api/bookrouter/edit-book/' + props.match.params.id;
 
-  const [categories, setCategory] = useState({title_category: ''});
+  const [categories, setCategory] = useState([]);
   // const [value, setValue] = React.useState();
 
-  // useEffect(() => {
-	// 	const fetchBook = async () => {
-	// 		setShowLoading(true)
-	// 		axios.put(Url)
-	// 			.then(res => res.json())
-	// 			.then(data => {
-  //         setInputs(data)
-  //         console.log(data)
-	// 				setShowLoading(false)
-	// 			})
-	// 			.catch(err => {
-	// 				console.log(err)
-	// 			})
-	// 	}
-	// 	fetchBook();
-	// }, []);
+  useEffect(() => {
+    setShowLoading(false)
+		const fetchaa = async () => {
+		// const result = await axios.get(Url)
+				// .then(res => res.json())
+    fetch(Url)
+			// .then(res => res.json())
+			.then(data => {
+		    setInputs(data)
+      // console.log(result.data)
+        setShowLoading(false)
+      
+    })
+    .catch(err => {
+      console.log(err)
+    })
+    }
+		fetchaa();
+	}, []);
 
 
-
-  const editBook = async (e) => {
-    setShowLoading(true);
-    e.preventDefault()
-    const data = { bookID: props.match.params.id, title: inputs.title, collection: inputs.collection, author: inputs.author, oeuvre: inputs.oeuvre, category_id: inputs.category_id, editor: inputs.editor}
-    axios.put(Url, data)
-    .then((result) => {  
-      setShowLoading(false);
-      props.history.push('/')
-    }).catch((error) => setShowLoading(false)
-    )
-  }
-  
-  const handleInputChange = event => {
-    event.persist();
-    setInputs({
-      ...inputs,
-      [event.target.name]: event.target.value});
-  }
-	
-	useEffect(() => {
+  useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
       fetch('/api/bookrouter/books/category')
@@ -77,9 +60,44 @@ const EditBook = (props) => {
 				})
 		}
 		fetchBook();
-	}, []);
+  }, []);
 
 
+  const editBook = (e) => {
+    setShowLoading(true);
+    e.preventDefault();
+    const data = { title: inputs.title, collection: inputs.collection, author: inputs.author, oeuvre: inputs.oeuvre, category_id: inputs.category_id, editor: inputs.editor};
+    axios.put(Url, data)
+      .then((result) => {
+        setShowLoading(false);
+        props.history.push('show-book/' + result.data.id)
+      }).catch((error) => setShowLoading(false));
+  };
+
+  const handleInputChange = event => {
+    event.persist();
+    setInputs({
+      ...inputs,
+      [event.target.name]: event.target.value});
+  }
+	
+	
+
+  // const editBook =  (e) => {
+  //   setShowLoading(true)
+  //   e.preventDefault()
+  //   const data = {title: inputs.title, collection: inputs.collection, author: inputs.author, oeuvre: inputs.oeuvre, category_id: inputs.category_id, editor: inputs.editor}
+  //   axios.put(Url, data)
+  //     .then((result => {
+  //       // setInputs(data)
+  //       setShowLoading(false)
+  //       props.history.push('/show-book/' + result.data.bookID)
+  //     }).catch((error) => setShowLoading(false)));
+    
+  // }
+
+
+  
 return (
   <div>
     {showLoading &&
@@ -96,7 +114,7 @@ return (
         <Input
             type="text"
             placeholder=".. titre"
-            value= {inputs.title || ""}
+            value= {inputs.title}
             onChange={handleInputChange}
             name="title"
             required
@@ -112,7 +130,7 @@ return (
         <Input
           type="text"
           placeholder=".. collection"
-          value={inputs.collection || ""}
+          value={inputs.collection}
           onChange={handleInputChange}
           name="collection"
         />
@@ -127,8 +145,8 @@ return (
         <Input
             type="text"
             placeholder=".. éditeur"
-            value={inputs.editor || ""}
-            onChange={handleInputChange}
+            value={inputs.editor}
+          onChange={handleInputChange}
             name="editor"
         />
         </Col>
@@ -142,7 +160,7 @@ return (
         <Input
           type="text"
           placeholder=".. auteur"
-          value={inputs.author || ""}
+          value={inputs.author}
           onChange={handleInputChange}
           name="author"
         />
@@ -154,28 +172,18 @@ return (
             Genre
         </Label>
         <Col sm={6}>
-        <Input
-          type="text"
-          placeholder=".. mettre un SELECT"
-          categories={categories.title_category || ""}
-          onChange={handleInputChange}
-          name="category_id"
-        />
-          {/* <FormControl 
+   
+          <FormControl 
             as="select"
             name="category_id"
-            value= {inputs.category_id || title}
-            onChange={handleInputChange}
+          onChange={handleInputChange}
           >
             
-          {categories.map((category, id) => 
-						<option key={id} className="">{category.title_category}</option>
+          {categories.map((category, key) => 
+						<option value={category.id}  key={key} className="" >{category.title_category}</option>
           )}
           
-          </FormControl>  */}
-
-          
-          
+          </FormControl>  
         </Col> 
       </FormGroup>
 
@@ -187,8 +195,8 @@ return (
           <Input
             type="text"
             placeholder=".. oeuvre"
-            value={inputs.oeuvre || ""}
-            onChange={handleInputChange}
+            value={inputs.oeuvre}
+          onChange={handleInputChange}
             name="oeuvre"
             />
         </Col>

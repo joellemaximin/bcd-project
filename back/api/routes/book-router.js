@@ -20,11 +20,11 @@ router.get("/", async (req,res) => {
 // post router
 router.post("/", async (req, res) => {
   var postData  = req.body;
+  console.log(req.body)
   pool.query('INSERT INTO books SET ?', postData, function (error, results, fields) {
     if (error) throw error;
-    res.end(JSON.stringify(results));
+    res.send(results);
   });
- 
   // try {
   //   const book = await db.add(req.body);
   //   console.log(req.body)
@@ -49,12 +49,6 @@ router.get('/book/:id', async (req, res) => {
 });
 
 
-
-// SELECT * FROM books INNER JOIN categories ON (book_id = categories.`category_id`);
-//SELECT * FROM categories LEFT JOIN books ON book_id = category_id'
-// SELECT books.`category_id`, books.`editor`, books.`collection`, books.`title`, books.`oeuvre` FROM books RIGHT JOIN categories ON (books.`category_id` = `category_id`;
-
-
 //update a book
 router.put('/edit-book/:id', async (req, res) => {
     try {
@@ -71,11 +65,9 @@ router.put('/edit-book/:id', async (req, res) => {
 
 //remove a book
 router.delete('/delete/book/:id', (req, res) => {
-  // var bookID = req.params.id
-  // const deleteBook = ;
-  // console.log("bookID: ", req.params.bookID);
+  
   pool.query('DELETE FROM books WHERE bookID = ?', [req.params.id], (err,rows, fields) =>{
-    console.log(req.params.id, 'EEeeeeeeee')
+    //console.log(req.params.id)
     if (!err) 
     res.send('deleted success')
     else 
@@ -86,50 +78,19 @@ router.delete('/delete/book/:id', (req, res) => {
   );
 
 });
-   // try {
-    //     const book = await db.remove(req.params.id);
-    //     if(book) {
-    //         res.status(200).json({message: "Book deleted ."})
-    //     } else {
-    //         res.status(500).json({message: "Book is not found"})
-    //     }
-    // } catch (error) {
-    //   res.status(500).json({message: "Book is not deleted"});
-    // }
+
 
 //display count books
 router.get("/counter/countBooks", async (req,res) => {
-  const countBooks = 'SELECT COUNT(*) FROM Books';
+  const countBooks = 'SELECT COUNT(*) as total FROM books ';
   pool.query(countBooks, function (err, result){
     if (err) throw err;
-    res.json(result);
+    res.json(result[0].total);
 
 
   });
-  req.flash('success', 'Project Deleted');
-  res.location('/admin');
-  res.redirect('/admin');
-  console.log(result);
+
 })
-
-//get book inner join or join category here
-
-// router.get("/", async (req,res) => {
-//   function cate(book) {
-//     Object.keys(book).forEach(function(bookk){
-//         const category = 'SELECT * FROM categories WHERE id = ' + book._id;
-//         pool.query(category, function (err, result){
-//             if (err) throw err;
-//             console.log("Book name: + ‘bookk.title‘+ categoryname; {category.category_title}")
-  
-//     })
-//     return;
-//             //     res.send(result);
-//     //   console.log(result);
-
-//     // 
-//   })};
-
 
 
 /////        FILTERS      //////
@@ -137,7 +98,7 @@ router.get("/counter/countBooks", async (req,res) => {
 
 //display books by authors or name or first letter from column oeuvre and author or by category
 router.get('/order/oeuvres', async (req, res)=>{
-  const oeuvre = 'SELECT * FROM books WHERE title  oeuvre';
+  const oeuvre = 'SELECT * FROM books WHERE title oeuvre';
   pool.query(oeuvre, function (err, result){
     if (err) throw err;
     res.send(result);
@@ -148,8 +109,8 @@ router.get('/order/oeuvres', async (req, res)=>{
 
 
 //display books asc or desc of the title
-router.get('/order/title-asc', async (req, res)=>{
-  const asc_title = 'SELECT title FROM Books ORDER BY title ASC';
+router.get('/order/title', async (req, res)=>{
+  const asc_title = 'SELECT title FROM Books ORDER BY title ASC AND ORDER BY title ASC ';
   pool.query(asc_title, function (err, result){
     if (err) throw err;
     res.send(result);
@@ -158,15 +119,15 @@ router.get('/order/title-asc', async (req, res)=>{
   });
 })
 
-router.get('/order/title-desc', async (req, res)=>{
-  const desc_title = 'SELECT title FROM Books ORDER BY title DESC';
-  pool.query(desc_title, function (err, result){
-    if (err) throw err;
-    res.send(result);
-    console.log(result);
+// router.get('/order/title-desc', async (req, res)=>{
+//   const desc_title = 'SELECT title FROM Books ORDER BY title DESC';
+//   pool.query(desc_title, function (err, result){
+//     if (err) throw err;
+//     res.send(result);
+//     console.log(result);
 
-  });
-})
+//   });
+// })
 
 //filter books oeuvre
 router.get('/order/oeuvres', async (req, res)=>{
@@ -191,18 +152,20 @@ router.get('/order/author', async (req, res)=>{
 })
 
 router.get('/books/category', async (req, res)=>{
-  const title_categoryColumn = 'SELECT categories.`title_category` from books INNER JOIN categories ON books.`category_id` = categories.`id` ';
+  const title_categoryColumn = 'SELECT categories.`title_category`, categories.id from books inner join categories on books.`category_id` = categories.`id`';
   pool.query(title_categoryColumn, function (err, result){
     if (err) throw err;
     res.send(result);
-    console.log(result);
+    console.log(result[0]);
 
   });
 })
+
 //matched any characters from title column from a to z
 
-router.get('/ok/search-by-letter/?', async (req, res)=>{
-  const matched_character = "SELECT title FROM Books WHERE title REGEXP '^[^abcd]' ";
+router.get('/search-by-letter/:title', async (req, res)=>{
+  // const matched_character = 'select * from books where title like" %' + req.params.title + '% ";'
+  const matched_character = 'select * from books where title like "%' + [req.params.title] + '%";'
   pool.query(matched_character, function (err, result){
     if (err) throw err;
     res.send(result);

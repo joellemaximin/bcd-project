@@ -17,15 +17,15 @@ const EditStudent = (props) => {
   const [inputs, setInputs] = useState(
     { name: '', age: '', grade: ''}
   );
-  // const [value, setValue] = React.useState();
+  // const [value, setValue] = useState([]);
 
 	useEffect(() => {
     setShowLoading(true)
     const id = props.match.params.id
     axios.get('/api/students/student/' + id)
-      .then(res => {
-        console.log(res.inputs)
-        setInputs(res.inputs)
+      .then(data => {
+        console.log(data)
+        setInputs(data)
         setShowLoading(false)
       })
       .catch(err => {
@@ -34,6 +34,7 @@ const EditStudent = (props) => {
     },[]
   );
 
+
   const handleInputChange = event => {
     event.persist();
     setInputs({
@@ -41,10 +42,11 @@ const EditStudent = (props) => {
       [event.target.name]: event.target.value});
   }
 
+
   const editStudent = async (e) => {
     e.preventDefault()
     const id = props.match.params.id
-    axios.put('/api/student' + id, inputs)
+    axios.put('/api/students/student' + id)
       .then(res => {
         console.log(res.data)
         props.history.push('/student-list')
@@ -63,15 +65,15 @@ return (
     <Form onSubmit={editStudent} >
       <FormGroup  row>
         <Label sm={2}>
-           Nom/Prénom
+          Nom/Prénom
         </Label>
         <Col sm={6}>
         <Input
-            type="text"
-            value= {inputs.name || ""}
-            onChange={handleInputChange}
-            name="name"
-            required
+          type="text"
+          value= {inputs.name}
+          onChange={handleInputChange}
+          name="name"
+          required
         />
         </Col>
       </FormGroup>
@@ -83,7 +85,7 @@ return (
         <Col sm={6}>
         <Input
           type="text"
-          value={inputs.grade || ""}
+          value={inputs.grade}
           onChange={handleInputChange}
           name="grade"
         />
@@ -96,10 +98,10 @@ return (
         </Label>
         <Col sm={3}>
         <Input
-            type="text"
-            value={inputs.age || ""}
-            onChange={handleInputChange}
-            name="age"
+          type="text"
+          value={inputs.age}
+          onChange={handleInputChange}
+          name="age"
         />
         </Col>
       </FormGroup>

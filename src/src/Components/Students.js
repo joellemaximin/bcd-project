@@ -22,8 +22,8 @@ const Students = (props)=> {
 			fetch('/api/students')
 				.then(res => res.json())
 				.then(data => {
-					setStudents(data)
 					setShowLoading(false)
+					setStudents(data)
 				})
 				.catch(err => {
 					console.log(err)
@@ -42,8 +42,7 @@ const Students = (props)=> {
 	}
 
 	const deleteStudent = (id) => {
-		//setShowLoading(true);
-
+		setShowLoading(true);
 		const deleteUrl = '/api/students/delete/' + id;
 			axios.delete(deleteUrl)
 			.then((result) => {  
