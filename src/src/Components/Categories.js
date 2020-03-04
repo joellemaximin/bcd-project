@@ -2,22 +2,21 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 import {
-	Form,
-	FormGroup,
-	Label,
-	Input,
-	Button,
 	Table 
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+
+import { 
+	Spinner,
+	Button 
+} from 'react-bootstrap';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 
 const Categories = (props)=> {
 	const [categories, setCategory] = useState([]);
 	const [showLoading, setShowLoading] = useState(true);
 	const [error, setError] = React.useState(null);
-	
+	const history = useHistory()
+
 	useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
@@ -35,11 +34,13 @@ const Categories = (props)=> {
 	}, []);
 
 
-  const editCat = (id) => {
+  	const editCat = (id) => {
 		props.history.push({
 			pathname: '/edit-cat/' + id
 		});
 	}
+
+
 
 	//pas de remove category
 	
@@ -59,14 +60,14 @@ const Categories = (props)=> {
 			
 			{/* {showLoading && <Spinner animation='border' role='status' >
 				<span className="sr-only">Chargement...</span>
-	</Spinner> } */}
-			
+			</Spinner> } */}
+
+			<Button onClick={() => history.push('/add-categories') } >Nouveau niveau </Button>
 
 			<Table striped bordered hover >
 				<thead>
 					<tr>
-						<th>Titre de la catégorie</th>
-
+						<th>Niveau de classe</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -81,7 +82,7 @@ const Categories = (props)=> {
 							Edit
 						</Button>
 						<Button 
-						  variant="outline-primary"
+						  variant="outline-dark"
 						  size="sm" 
 						  disabled
 						  >

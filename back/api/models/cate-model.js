@@ -3,7 +3,7 @@ const db = require("../../data/dbConfig");
 module.exports = {
   add,
   find,
-  get,
+  // get,
   findById,
   update
 };
@@ -16,15 +16,12 @@ function find() {
   return db("categories");
 }
 
-function get(id) {
-  //what does this do? U display the title with id by desc or asc
-  if (id) {
-    return db("categories")
-      .where({ id: Number(id) })
-  } else {
-    return db("categories");
-  }
-}
+// function get(id) {
+//   //what does this do? U display the title with id by desc or asc
+//     return db("categories")
+//       .where({ id: Number(id) })
+  
+// }
 
 //find a cat by id
 function findById(id) {

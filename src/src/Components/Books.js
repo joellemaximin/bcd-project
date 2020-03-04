@@ -1,42 +1,40 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-
 import {
-	Form,
-	FormGroup,
-	Label,
-	Input,
-	Button,
 	Table 
 } from 'reactstrap';
-// import { Button } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+import { 
+	Spinner,
+	Button 
+} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faSearch,
+  faCheckCircle
+} from '@fortawesome/free-solid-svg-icons'
 import Book from './Book';
 // import SwitchButtons from './SwitchButton'
+import { useHistory } from "react-router-dom";
 
 const Books = (props)=> {
 	const [books, setBook] = useState([]);
 	const [showLoading, setShowLoading] = useState(true);
 	// const [error, setError] = React.useState(null);
 	const [counter, setCounter] = useState([]);
+	const history = useHistory()
 
-	useEffect(() => {
-		const fetchBook = async () => {
-			setShowLoading(true)
-			fetch('/api/bookrouter/')
-				.then(res => res.json())
-				.then(data => {
-					setShowLoading(false)
-					setBook(data)
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		}
-		fetchBook();
-	}, []);
-
-
+	const fetchBook = async () => {
+		setShowLoading(true)
+		fetch('/api/bookrouter/')
+			.then(res => res.json())
+			.then(data => {
+				setShowLoading(false)
+				setBook(data)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	}
 
 
     const editBook = (id) => {
@@ -55,7 +53,7 @@ const Books = (props)=> {
 	const deleteBook = async (id) => {
 		const delteUrl = '/api/bookrouter/delete/book/' + id;
 
-		//setShowLoading(true);
+		setShowLoading(true);
 
 		axios.delete(delteUrl)
 			.then((result) => {  
@@ -65,6 +63,7 @@ const Books = (props)=> {
 			});
 		
 	}
+
 
 	function getCount() {
 		setShowLoading(true)
@@ -79,9 +78,13 @@ const Books = (props)=> {
 		})
 	}
 	
+	function available(){
+		console.log('available ? yes : no')
+	}
 
 	useEffect(() => {
-		getCount()
+		getCount();
+		fetchBook();
 	}, [])
 
 
@@ -96,24 +99,43 @@ const Books = (props)=> {
 			
 
 			<Book/>
+			
+			<Button 
+				variant="outline-primary"
+				size="sm"
+				onClick={() =>
+					history.push('/add-booking') } 
+			>
+			Emprunter un livre
+			</Button>
+
+			
+			<Button
+				variant="outline-primary"
+				size="sm"
+				onClick={() => 
+					history.push('/add-book') } 
+			>
+			Ajouter un livre
+			</Button>
 
 			{/* <SwitchButtons /> */}
 
-			<h3>Liste des livres: {counter} </h3>
+			<h3>Il y a {counter} livres enregistrés. </h3>
 
 			
 			<Table striped bordered hover >
 				<thead>
 					<tr>
-					<th>ID:</th>
-
-						<th>Nom du livre</th>
+						<th></th>
+						<th>Titre du livre</th>
 						<th>Edition</th>
-						<th>Autheur</th>
+						<th>Auteur</th>
 						<th>Collection</th>
 						<th>Oeuvre</th>
-						<th>Categorie</th>
+						<th>Niveau Classe</th>
 						<th>
+						  Actions
 						</th>
 
 					</tr>
@@ -121,7 +143,16 @@ const Books = (props)=> {
 				<tbody>
 					{books.map((book, key) => 
 						<tr key={key} className="">
-							<td>{book.bookID}</td>
+							<td>
+								<Button
+								variant="outline-default"
+								size="lg"
+								onClick={()=> {available(book.bookID)}}
+								>
+								<FontAwesomeIcon icon={faCheckCircle} />
+
+								</Button>
+							</td>
 							<td>{book.title}</td>
 							<td>{book.edition}</td>
 							<td>{book.author}</td>
@@ -129,59 +160,40 @@ const Books = (props)=> {
 							<td>{book.oeuvre}</td>
 							<td>{book.title_category}</td>
 
-							
 						<td>
-							<Button variant="outline-primary"
-								// to={"/edit-book/"+ book.id}
+							<Button
+								variant="outline-primary"
 								size="sm"
 								onClick={()=> {editBook(book.bookID)}}
 							>
 							Edit
 							</Button>
-						</td>
-						<td>
-							<Button variant="outline-primary"
-								// to={"/edit-book/"+ book.id}
+				
+							<Button
+                				style={{ whiteSpace: "pre" }}
+								variant="outline-primary"
 								size="sm"
 								onClick={()=> {displayBook(book.bookID)}}
 							>
-							Afficher
+								<FontAwesomeIcon icon={faSearch} />
+							</Button>
+			
+              <Button
+                style={{ whiteSpace: "pre" }}
+                variant="outline-danger"
+                size="sm"
+                onClick={()=> {deleteBook(book.bookID)}}
+              > X
 							</Button>
 						</td>
-						<td>
-							<Button
-							variant="danger"
-							size="sm"
-							onClick={()=> {deleteBook(book.bookID)}}
-							>
-							Delete
-							</Button>
-						</td>
+							
 					</tr>
 
 					)}
 					
 				</tbody>
 			</Table>
-		
-		 
-			{/* <Button
-					className="waves-effect waves-light btn"
-					onClick={this.addCategory}
-					>
-					Ajouter une category
-			</Button>
-			<Form>
-					<FormGroup>
-						<Label for="BookSearch">Search</Label>
-							<Input
-							type="search"
-							name="search"
-							id="BookSearch"
-							placeholder="search placeholder"
-							/>
-					</FormGroup>
-			</Form> */}
+
 
 		</div>
 	

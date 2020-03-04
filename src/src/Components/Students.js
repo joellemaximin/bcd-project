@@ -1,12 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {
-	Button,
 	Table 
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { 
+	Spinner,
+	Button 
+} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faSearch
+} from '@fortawesome/free-solid-svg-icons'
+import { withRouter, useHistory, Link } from 'react-router-dom';
 
 //.list-group-item : border: 0
 
@@ -15,7 +20,8 @@ const Students = (props)=> {
 	const [students, setStudents] = useState([]);
 	const [showLoading, setShowLoading] = useState(true);
 	const [error, setError] = React.useState(null);
-	
+	const history = useHistory()
+
 	useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
@@ -35,9 +41,7 @@ const Students = (props)=> {
 
   const editStudent = (id) => {
 		props.history.push({
-
 			pathname: '/edit-student/' + id
-	 
 		});
 	}
 
@@ -52,16 +56,15 @@ const Students = (props)=> {
 
 			});
 		
-		
 	}
 	
-	// props.history.push({
-	// 	pathname: "/edit-book/"+ id
-	// }
-	// const onChangeItemName = (itemId) => {
-	// 	setNotesDummyData(notesDummyData.filter(({ id }) => id !== itemId));
-	// };
-		
+	const displayStudent = (id) => {
+		props.history.push({
+			pathname: '/profile-student/' + id
+		});
+	}
+
+//display books readed or reading by students.. get title, name from books borrowed  
 
 	if (students.showLoading) return <Spinner animation='border' role='status' >
 	<span className="sr-only">Chargement...</span>
@@ -76,14 +79,15 @@ const Students = (props)=> {
 				</Spinner> 
 			}
 		
-	
+			<Button onClick={() => history.push('/add-student') } >Ajouter un élève </Button>
+
 			<Table striped bordered hover >
 				<thead>
 					<tr>
 						<th>NOM/PRENOM</th>
 						<th>Classe</th>
 						<th>Age</th>
-						<th>Actions</th>
+						<th></th>
 
 					</tr>
 				</thead>
@@ -95,24 +99,36 @@ const Students = (props)=> {
 							<td>{student.age}</td>		
 	
 							<td>
-							<Button variant="outline-primary"
+								<Button 
+									variant="outline-primary"
 									size="sm"
 									onClick={()=> {editStudent(student.id)}}
+									>
+									Edit
+								</Button>
+							</td>
+							<td>
+								<Button
+									style={{ whiteSpace: "pre" }}
+									variant="outline-primary"
+									size="sm"
+									onClick={()=> {displayStudent(student.id)}}
 								>
-								Edit
-							</Button>
+									<FontAwesomeIcon icon={faSearch} />
+								</Button>
+							</td>
+							<td>
 
-							<Button 
-							variant="outline-primary"
-							size="sm"
-							
-							onClick={()=>
-							
-								{deleteStudent(student.id)}
-							}
-							>
-								Delete
-							</Button>
+								<Button 
+								variant="danger"
+								size="sm"
+								
+								onClick={()=>
+									{deleteStudent(student.id)}
+								}
+								>
+									Delete
+								</Button>
 							</td>
 				
 						</tr>
@@ -123,24 +139,7 @@ const Students = (props)=> {
 				</tbody>
 			</Table>
 	
-		 
-			{/* <Button
-					className="waves-effect waves-light btn"
-					onClick={this.addCategory}
-					>
-					Ajouter une category
-			</Button>
-			<Form>
-					<FormGroup>
-						<Label for="BookSearch">Search</Label>
-							<Input
-							type="search"
-							name="search"
-							id="BookSearch"
-							placeholder="search placeholder"
-							/>
-					</FormGroup>
-			</Form> */}
+	
 
 		</div>
 	

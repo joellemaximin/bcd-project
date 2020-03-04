@@ -15,11 +15,10 @@ const AddBook = (props) => {
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
-    {title: '', collection: '', author: '', oeuvre: '', editor: '', category_id: ''}
+    {title: '', collection: '', author: '', oeuvre: '', editor: ''}
   );
   //  title_category: '', , category_id: ''
   const [categories, setCategory] = useState([]);
-  const [value, setValue] = useState();
 
   const handleInputChange = event => {
     event.persist();
@@ -30,7 +29,7 @@ const AddBook = (props) => {
 
   const addBook = async (e) => {
     e.preventDefault()
-    axios.post('/api/bookrouter', inputs,
+    axios.post('/api/bookrouter/', inputs,
       {
       validateStatus: function (status) {
       return status < 600; // Reject only if the status code is greater than or equal to 500
@@ -49,7 +48,7 @@ const AddBook = (props) => {
 	useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
-      fetch('/api/bookrouter/books/category')
+      fetch('/api/categories')
 				.then(res => res.json())
 				.then(data => {
           setShowLoading(false)
@@ -146,10 +145,7 @@ return (
 						<option value={category.id}  key={key} className="" >{category.title_category}</option>
           )}
           
-          </FormControl>  
-
-          
-          
+          </FormControl>
         </Col> 
       </FormGroup>
 
@@ -183,43 +179,3 @@ return (
   )
 }
 export default AddBook;
-
-    // useEffect(() => { 
-    //   async const fetchBook = async () => {
-    //     fetch('/api/bookrouter', {
-    //       method: "POST",
-    //       body: JSON.stringify(book),
-    //       headers: {
-    //         Accept: "application/json",
-    //         "Content-Type": "application/json"
-    //       }
-    //     })
-    //     .then(res => res.json())
-    //     .then(data => {
-    //       setBook(data)
-    //       setShowLoading(false)
-    //     })
-    //     .catch(error =>
-    //     alert("Error server:" + error)
-    //     ); 
-    //   }
-    //   fetchBook();
-    // },  [book]);
-
-//     useEffect(() => {
-//       const fetchBook = async (body) => {
-//         const response = await fetch('/api/bookrouter', {
-//         method: "POST",
-//         body,
-//         headers: {
-//           // 'Accept': 'application/json',
-//           'Content-Type': 'application/json'
-//         }
-//         })
-//         const data = await response.json();
-//         if(!response.ok) {
-//           throw new Error(data)
-//         }
-//         setTitle(data);  // what comes back is set to a JS variable called 'data'
-
-

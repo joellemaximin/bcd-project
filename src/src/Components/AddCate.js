@@ -26,7 +26,7 @@ const AddCate = () => {
 
 	const submitAdd = async (e) => {
 		e.preventDefault()
-		axios.post('/api/categories', inputs,
+		axios.post('/api/categories/', inputs,
 			{
 			validateStatus: function (status) {
 			return status < 600; // Reject only if the status code is greater than or equal to 500
@@ -44,7 +44,7 @@ const AddCate = () => {
 	useEffect(() => {
 		const fetchBook = async () => {
 			setShowLoading(true)
-				fetch('/api/catgories')
+				fetch('/api/categories/')
 				.then(res => res.json())
 				.then(data => {
 					setInputs(data)

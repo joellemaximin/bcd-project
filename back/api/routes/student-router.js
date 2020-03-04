@@ -10,16 +10,6 @@ router.use(express.json());
 router.get("/", async (req, res) => {
   try {
     const student = await db.find();
-
-    // student.sort(function(a, b) {
-    //   if (a.title < b.title) {
-    //     return -1;
-    //   }
-    //   if (a.title > b.title) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // });
     res.status(200).json(student);
   } catch (error) {
     res.status(500).json(error.message);
@@ -42,6 +32,15 @@ router.post("/", async (req, res) => {
 
 //get one student
 router.get('/student/:id', async (req, res) => {
+  const selectBookId = 'SELECT * FROM students WHERE id = ?';
+  pool.query(selectBookId, [req.params.id], function (err, result){
+    if (err) throw err;
+    res.send(result);
+    console.log(result);
+  })
+});
+
+router.get('/show-student/:id', async (req, res) => {
   try {
     const student = await db.findById(req.params.id);
     if(student) {
@@ -57,20 +56,25 @@ router.get('/student/:id', async (req, res) => {
 
 //update a student
 router.put('/edit-student/:id', async (req, res) => {
-    try {
-        const student = await db.update(req.params.id);
-        if(student) {
-            res.status(200).json(student)
-        } else {
-            res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
-        }
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
+    pool.query('UPDATE `students` SET `name`=?,`grade`=?,`age`=? where `id`=?', [req.body.name, req.body.grade, req.body.age, req.body.id], function (error, results, fields) {
+      if (err) throw err;
+      res.send(results);
+      console.log(results);
+    })
+  // try {
+  //   const student = await db.update(req.params.id, req.body);
+  //   if(student) {
+  //       res.status(200).json(student)
+  //   } else {
+  //       res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
+  //   }
+  // } catch (error) {
+  //   res.status(500).json(error.message);
+  // }
 });
 
 //remove a student
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res, next) => {
   pool.query('DELETE FROM students WHERE id = ?', [req.params.id], (err,rows, fields) =>{
     console.log(req.params.id, 'EEeeeeeeee')
     if (!err)
@@ -78,18 +82,18 @@ router.delete('/delete/:id', async (req, res) => {
     else 
     console.log(err)
 
-  }  );
+  });
 
-    // try {
-    //     const student = await db.remove(req.params.id);
-    //     if(student) {
-    //         res.status(200).json({message: "Student deleted ."})
-    //     } else {
-    //         res.status(500).json({message: "Student is not found"})
-    //     }
-    // } catch (error) {
-    //   res.status(500).json({message: "Student is not deleted"});
-    // }
+  
+  // const student = await db.remove({id: id(req.params.id)};
+  //       if(student) {
+  //           res.status(200).json({message: "Student deleted ."})
+  //       } else {
+  //           res.status(500).json({message: "Student is not found"})
+  //       }
+  //   } catch (error) {
+  //     res.status(500).json({message: "Student is not deleted"});
+  //   }
 });
 
 

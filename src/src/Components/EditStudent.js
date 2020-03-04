@@ -10,29 +10,30 @@ import {
   Button }
 from 'reactstrap';
 
-const EditStudent = (props) => {
+const EditStudent = ({match, props})  => {
   
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
     { name: '', age: '', grade: ''}
   );
-  // const [value, setValue] = useState([]);
+	let id = match.params.id
 
-	useEffect(() => {
-    setShowLoading(true)
-    const id = props.match.params.id
-    axios.get('/api/students/student/' + id)
-      .then(data => {
-        console.log(data)
-        setInputs(data)
-        setShowLoading(false)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },[]
-  );
+  useEffect(() => {
+		const fetchStudent = async () => {
+		fetch(`/api/students/show-student/${id}`)
+		  .then(res => res.json())
+		  .then(data => {
+			  setInputs(data)
+			  console.log(data)
+		  })
+		  .catch(err => {
+			  console.log(err)
+		  })
+  }
+		fetchStudent();
+	}, [id]);
+
 
 
   const handleInputChange = event => {
@@ -45,8 +46,7 @@ const EditStudent = (props) => {
 
   const editStudent = async (e) => {
     e.preventDefault()
-    const id = props.match.params.id
-    axios.put('/api/students/student' + id)
+    axios.put(`/api/students/edit-student/${id}`)
       .then(res => {
         console.log(res.data)
         props.history.push('/student-list')
@@ -70,7 +70,7 @@ return (
         <Col sm={6}>
         <Input
           type="text"
-          value= {inputs.name}
+          value= {inputs.name || ""}
           onChange={handleInputChange}
           name="name"
           required
@@ -85,7 +85,7 @@ return (
         <Col sm={6}>
         <Input
           type="text"
-          value={inputs.grade}
+          value={inputs.grade || ""}
           onChange={handleInputChange}
           name="grade"
         />
@@ -99,7 +99,7 @@ return (
         <Col sm={3}>
         <Input
           type="text"
-          value={inputs.age}
+          value={inputs.age || ""}
           onChange={handleInputChange}
           name="age"
         />

@@ -10,46 +10,36 @@ import {
   Button }
 from 'reactstrap';
 import Spinner from 'react-bootstrap/Spinner';
+import { useParams } from 'react-router-dom';
 
-const EditBook = (props) => {
+const EditBook = ({match, props})=> {
   
-	const [showLoading, setShowLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(true);
+  let id = match.params.id
   // const [location, classes, history] = props;
-  
-  const [inputs, setInputs] = useState(
-    {bookID: '', title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
+  const [inputs, setInputs] = useState([]
+    // {bookID: '', title: '', collection: '', author: '', oeuvre: '', category_id: '', editor: ''}
   );
-  
-  const Url = '/api/bookrouter/edit-book/' + props.match.params.id;
 
+  // const Url = '/api/bookrouter/edit-book/' + props.match.params.id;
   const [categories, setCategory] = useState([]);
-  // const [value, setValue] = React.useState();
 
-  useEffect(() => {
-    setShowLoading(false)
-		const fetchaa = async () => {
-		// const result = await axios.get(Url)
-				// .then(res => res.json())
-    fetch(Url)
-			// .then(res => res.json())
-			.then(data => {
-		    setInputs(data)
-      // console.log(result.data)
-        setShowLoading(false)
-      
-    })
-    .catch(err => {
-      console.log(err)
-    })
-    }
-		fetchaa();
-	}, []);
+ 
+	useEffect(() => {
+		async function fetchBook() {
+		  const response = await fetch(`/api/bookrouter/show-book/${id}`)
+			const data = await response.json();
+			console.log(data)
+		  setInputs(data);
+		}
+		fetchBook();
+	}, [id]);
 
 
   useEffect(() => {
-		const fetchBook = async () => {
+		const fetchCategories = async () => {
 			setShowLoading(true)
-      fetch('/api/bookrouter/books/category')
+      fetch('/api/categories')
 				.then(res => res.json())
 				.then(data => {
 					setCategory(data)
@@ -59,20 +49,40 @@ const EditBook = (props) => {
 					console.log(err)
 				})
 		}
-		fetchBook();
+		fetchCategories();
   }, []);
 
 
-  const editBook = (e) => {
-    setShowLoading(true);
-    e.preventDefault();
-    const data = { title: inputs.title, collection: inputs.collection, author: inputs.author, oeuvre: inputs.oeuvre, category_id: inputs.category_id, editor: inputs.editor};
-    axios.put(Url, data)
-      .then((result) => {
-        setShowLoading(false);
-        props.history.push('show-book/' + result.data.id)
-      }).catch((error) => setShowLoading(false));
-  };
+  // const editBook = (e) => {
+  //   setShowLoading(true);
+  //   e.preventDefault();
+  //   const data = { title: inputs.title, collection: inputs.collection, author: inputs.author, oeuvre: inputs.oeuvre, category_id: inputs.category_id, editor: inputs.editor};
+  //   axios.put(`/api/bookrouter/edit-book/${id}`, data)
+  //     .then((result) => {
+  //       setShowLoading(false);
+  //       console.log(result.data.id)
+  //       // props.history.push('show-book/' + result.data.id)
+  //     }).catch((error) => setShowLoading(false));
+  // };
+
+
+  const editBook = async (e) => {
+    e.preventDefault()
+    axios.put(`/api/bookrouter/edit-book/${id}`, inputs,
+      {
+      validateStatus: function (status) {
+      return status < 600; // Reject only if the status code is greater than or equal to 500
+      }}
+    )
+    .catch(function (error) {
+      console.log(error)
+    })  
+    .then(function (response) {
+      // props.history.push('/')
+      console.log(response)
+    })
+  }
+
 
   const handleInputChange = event => {
     event.persist();
@@ -91,7 +101,7 @@ const EditBook = (props) => {
   //     .then((result => {
   //       // setInputs(data)
   //       setShowLoading(false)
-  //       props.history.push('/show-book/' + result.data.bookID)
+  //       props.history.push('/show-book/' + result.data.id)
   //     }).catch((error) => setShowLoading(false)));
     
   // }
@@ -114,7 +124,7 @@ return (
         <Input
             type="text"
             placeholder=".. titre"
-            value= {inputs.title}
+            value= {inputs.title || ""}
             onChange={handleInputChange}
             name="title"
             required
@@ -130,7 +140,7 @@ return (
         <Input
           type="text"
           placeholder=".. collection"
-          value={inputs.collection}
+          value={inputs.collection || ""}
           onChange={handleInputChange}
           name="collection"
         />
@@ -145,7 +155,7 @@ return (
         <Input
             type="text"
             placeholder=".. éditeur"
-            value={inputs.editor}
+            value={inputs.editor || ""}
           onChange={handleInputChange}
             name="editor"
         />
@@ -160,7 +170,7 @@ return (
         <Input
           type="text"
           placeholder=".. auteur"
-          value={inputs.author}
+          value={inputs.author || ""}
           onChange={handleInputChange}
           name="author"
         />
@@ -195,7 +205,7 @@ return (
           <Input
             type="text"
             placeholder=".. oeuvre"
-            value={inputs.oeuvre}
+            value={inputs.oeuvre || ""}
           onChange={handleInputChange}
             name="oeuvre"
             />
