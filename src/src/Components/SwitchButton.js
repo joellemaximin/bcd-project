@@ -32,7 +32,7 @@ const SwitchButtons = (props)=> {
     
 
 	const displayAZ = async () => {
-		const display = '/api/bookrouter/order/title-asc';
+		const display = '/api/bookrouter/order/title';
 
 		axios.get(display)
 			.then((result) => {  

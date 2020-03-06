@@ -5,8 +5,8 @@ module.exports = {
   find,
   // get,
   findById,
-  remove,
-  update
+  remove
+  // update
 };
 
 async function add(body) {
@@ -37,11 +37,11 @@ function findById(id) {
 }
 
 // add update to model
-function update(id) {
-  return db("students")
-    .where({ id })
-    .update(body);
-}
+// function update(id) {
+//   return db("students")
+//     .where({ id })
+//     .update(body);
+// }
 
 //remove from db
 function remove(id) {

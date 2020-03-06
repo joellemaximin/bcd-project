@@ -41,21 +41,22 @@ const Book = ()=> {
       }
     }
 
-    const handleSubmit = async (e) => {
-      e.preventDefault()
-        setShowLoading(true)
-        fetch(`/api/bookrouter/search?/:title&q=${query}`)
-          .then(res => res.json())
-          .then(data => {
-          setShowLoading(false)
-          setTitle(data)
-      })
-			.catch(err => {
-				console.log(err)
-			})
-    }
+    // const handleSubmit = async (e) => {
+    //   e.preventDefault()
+    //     setShowLoading(true)
+    //     fetch(`/api/bookrouter/search?/:title&q=${query}`)
+    //       .then(res => res.json())
+    //       .then(data => {
+    //       setShowLoading(false)
+    //       setTitle(data)
+    //   })
+		// 	.catch(err => {
+		// 		console.log(err)
+		// 	})
+    // }
+
     const handleSearchChange = (e) => {
-      setQuery(e.target.value)
+      setTitle(e.currentTarget.value);
     }
   
     // let titleContent = titles.map((title, index) => {
@@ -117,7 +118,7 @@ const Book = ()=> {
           value={query}
           titles={titles}
           // onChange={onChange}
-          handleSubmit={handleSubmit}
+          // handleSubmit={handleSubmit}
           handleSearchChange={handleSearchChange}
 				/>
 				{titles.map((r,i)=> (   

@@ -18,11 +18,12 @@ module.exports = server => {
   server.use(express.json());
   server.use(cors());
   server.use(morgan("dev"));
+  // server.use(express.urlencoded({ extended: true }));
 
   server.use("/api/bookrouter", bookRouter);
   server.use("/api/students", studentRouter);
   server.use("/api/categories", cateRouter);
-  server.use("/api/book_borrowed", book_borrowed);
+  server.use("/api/bookborrowed", book_borrowed);
 
   // catch 404 and forward to error handler
 

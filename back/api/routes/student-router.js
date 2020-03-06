@@ -56,27 +56,19 @@ router.get('/show-student/:id', async (req, res) => {
 
 //update a student
 router.put('/edit-student/:id', async (req, res) => {
-    pool.query('UPDATE `students` SET `name`=?,`grade`=?,`age`=? where `id`=?', [req.body.name, req.body.grade, req.body.age, req.body.id], function (error, results, fields) {
-      if (err) throw err;
-      res.send(results);
-      console.log(results);
-    })
-  // try {
-  //   const student = await db.update(req.params.id, req.body);
-  //   if(student) {
-  //       res.status(200).json(student)
-  //   } else {
-  //       res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
-  //   }
-  // } catch (error) {
-  //   res.status(500).json(error.message);
-  // }
+ 
+  const putData = req.body;
+  pool.query('UPDATE students SET ? WHERE id = ? ', [putData, req.params.id], function(error, results, fields) {
+    console.log(req.params.id, 'id')
+    if (error) throw error;
+    res.send(results,'updated success');
+  });
 });
-
+  
 //remove a student
 router.delete('/delete/:id', async (req, res, next) => {
   pool.query('DELETE FROM students WHERE id = ?', [req.params.id], (err,rows, fields) =>{
-    console.log(req.params.id, 'EEeeeeeeee')
+    console.log(req.params.id, 'id')
     if (!err)
     res.send('deleted success')
     else 

@@ -21,16 +21,20 @@ const EditStudent = ({match, props})  => {
 
   useEffect(() => {
 		const fetchStudent = async () => {
-		fetch(`/api/students/show-student/${id}`)
-		  .then(res => res.json())
-		  .then(data => {
-			  setInputs(data)
-			  console.log(data)
-		  })
-		  .catch(err => {
-			  console.log(err)
-		  })
-  }
+		// fetch(`/api/students/show-student/${id}`)
+		//   .then(res => res.json())
+		//   .then(data => {
+		// 	  setInputs(data)
+		// 	  // console.log(data)
+		//   })
+		//   .catch(err => {
+		// 	  console.log(err)
+		//   })
+    const response = await fetch(`/api/students/show-student/${id}`)
+    const data = await response.json();
+    console.log(data)
+    setInputs(data)
+    }
 		fetchStudent();
 	}, [id]);
 
@@ -44,25 +48,37 @@ const EditStudent = ({match, props})  => {
   }
 
 
-  const editStudent = async (e) => {
-    e.preventDefault()
-    axios.put(`/api/students/edit-student/${id}`)
-      .then(res => {
-        console.log(res.data)
-        props.history.push('/student-list')
-      })
-      .catch(function (error) {
-        console.log(error)
-      })  
+  // const editStudent = async (e) => {
+  //   e.preventDefault()
+  //   axios.put(`/api/students/edit-student/${id}`)
+  //     .then(res => {
+  //       console.log(res.data)
+  //       props.history.push('/student-list')
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error)
+  //     })  
     
+  // }
+
+  function editStudent(e){
+    e.preventDefault()
+
+    axios.put(`/api/students/edit-student/${id}`, inputs)
+    .then(response =>{
+      console.log(response.data)
+      props.history.push('/')
+    })
+    .catch(function (error) {
+      console.log(error)
+    }) 
+    
+
   }
-
-	
-
 
 return (
   <div>
-    <Form onSubmit={editStudent} >
+    <Form onSubmit={(e) =>editStudent(e)} >
       <FormGroup  row>
         <Label sm={2}>
           Nom/Prénom

@@ -9,7 +9,7 @@ module.exports = {
 
 async function add(body) {
     return db("book_borrowed").insert(body)
-      .where({book_id, student_id})
+      .where()
 }
 
 function find() {

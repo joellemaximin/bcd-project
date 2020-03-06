@@ -100,7 +100,7 @@ const Students = (props)=> {
 	
 							<td>
 								<Button 
-									variant="outline-primary"
+									variant="primary"
 									size="sm"
 									onClick={()=> {editStudent(student.id)}}
 									>
@@ -110,7 +110,7 @@ const Students = (props)=> {
 							<td>
 								<Button
 									style={{ whiteSpace: "pre" }}
-									variant="outline-primary"
+									variant="primary"
 									size="sm"
 									onClick={()=> {displayStudent(student.id)}}
 								>
@@ -127,7 +127,7 @@ const Students = (props)=> {
 									{deleteStudent(student.id)}
 								}
 								>
-									Delete
+									X
 								</Button>
 							</td>
 				

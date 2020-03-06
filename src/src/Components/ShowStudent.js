@@ -15,11 +15,11 @@ function ShowStudent({match}) {
 	const [error, setError] = React.useState(null);
 	const history = useHistory()
 	let id = match.params.id
-  const [students, setStudent] = useState([]);
-  const [books, setBooksRead] = useState([]);
+	const [students, setStudent] = useState([]);
+	const [books, setBooksRead] = useState([]);
  
 
-  useEffect(() => {
+  	useEffect(() => {
 		const fetchStudent = async () => {
 		fetch(`/api/students/student/${id}`)
 		  .then(res => res.json())
@@ -88,14 +88,14 @@ function ShowStudent({match}) {
 		  	)
       } 
 		
-
+    {/* display books read by student */}
       <h3>Liste des livres lu : </h3>
 
       {
 				books.map((bb, key) => 
 				
 					<ul key={key}>
-            <li>{bb.title}</li>
+          	<li>{bb.title}</li>
 					</ul>
 				
 		  	)

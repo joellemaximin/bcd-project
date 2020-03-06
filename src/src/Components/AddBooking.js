@@ -14,7 +14,6 @@ import {
 	FormControl
 } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
-
 const AddBooking = (props)=> {
   const [inputs, setInputs] = useState(
     {title: '', name: '', numberOfdays: '', returned_at: '', start_date: ''}
@@ -25,14 +24,14 @@ const AddBooking = (props)=> {
 
 	useEffect(() => {
 		const fetchBook = async () => {
-			fetch('/api/book_borrowed')
-				.then(res => res.json())
-				.then(data => {
-					setInputs(data)
-				})
-				.catch(err => {
-					console.log(err)
-				})
+			fetch('/api/bookborrowed/')
+			.then(res => res.json())
+			.then(data => {
+				setInputs(data)
+			})
+			.catch(err => {
+				console.log(err)
+			})
 		}
 		fetchBook();
 	}, []);
@@ -60,16 +59,9 @@ const AddBooking = (props)=> {
 	}, []);
 
 
-  const handleInputChange = event => {
-    event.persist();
-    setInputs({
-      ...inputs,
-      [event.target.name]: event.target.value});
-	}
-	
 	const addBooking = async (e) => {
     e.preventDefault()
-    axios.post('/api/book_borrowed/', inputs,
+    axios.post('/api/bookborrowed/', inputs,
       {
       validateStatus: function (status) {
       return status < 600; // Reject only if the status code is greater than or equal to 500
@@ -85,6 +77,13 @@ const AddBooking = (props)=> {
     })
   }
 
+  const handleInputChange = event => {
+    event.persist();
+    setInputs({
+      ...inputs,
+      [event.target.name]: event.target.value});
+	}
+	
 
 
 	return (

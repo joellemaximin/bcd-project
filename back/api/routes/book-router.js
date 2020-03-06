@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 //get one book
 router.get('/show-book/:id', async (req, res) => {
   const selectBookId = 'SELECT books.*, categories.`title_category` FROM books INNER JOIN categories ON books.`category_id` = categories.`id` WHERE bookID = ?';
-  pool.query(selectBookId, [req.params.id], function (err, result){
+  pool.query(selectBookId, parseInt((req.params.id)), function (err, result){
     if (err) throw err;
     res.send(result);
     console.log(result);
@@ -37,24 +37,16 @@ router.get('/show-book/:id', async (req, res) => {
 });
 
 
-//update a book
-router.put('/edit-book/:id', async (req, res) => {
-  pool.query('UPDATE `books` SET `title`=?,`author`=?,`title_category`=?,`collection`=?, `oeuvre`=? where `bookID`=?', [req.body.title,req.body.author, req.body.collection, req.body.title_category, req.body.oeuvre, req.body.bookID], function (error, results, fields) {
-    if (err) throw err;
+router.put('/editbook/:id', async (req, res) => {
+  const putData = req.body;
+  pool.query('UPDATE books SET ? WHERE bookID = ? ', [putData, req.params.id], function(error, results, fields) {
+    if (error) throw error;
     res.send(results);
-    console.log(results);
-  })
-    // try {
-    //     const book = await db.update(req.params.id);
-    //     if(book) {
-    //         res.status(200).json(book)
-    //     } else {
-    //         res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
-    //     }
-    // } catch (error) {
-    //   res.status(500).json(error.message);
-    // }
+  });
 });
+
+//  pool.query(`UPDATE books SET ? WHERE bookID= ? `, [title,author,category_id], function(error, results, fields) {
+//  pool.query(`UPDATE books SET title="", author="", category_id="" WHERE bookID=?`, [title,author,category_id], function(error, results, fields) {
 
 //remove a book
 router.delete('/delete/book/:id', (req, res) => {
@@ -64,20 +56,7 @@ router.delete('/delete/book/:id', (req, res) => {
     res.send('deleted success')
     else 
     console.log(err)
-
-  // try {
-  //   const book = await db.remove(req.params.bookID);
-  //   if(book) {
-  //       res.status(200).json(book)
-  //   } else {
-  //       res.status(500).json({message: "Erreur, ne trouve pas l'Id"})
-  //   }
-  // } catch (error) {
-  //   res.status(500).json(error.message);
   });
-
-  
-
 });
 
 
@@ -108,7 +87,7 @@ router.get('/order/oeuvres', async (req, res)=>{
 
 //display books asc or desc of the title
 router.get('/order/title', async (req, res)=>{
-  const asc_title = 'SELECT title FROM Books ORDER BY title ASC AND ORDER BY title ASC ';
+  const asc_title = 'SELECT * FROM books ORDER BY title ASC, title DESC ';
   pool.query(asc_title, function (err, result){
     if (err) throw err;
     res.send(result);

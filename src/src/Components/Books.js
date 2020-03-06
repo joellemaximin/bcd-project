@@ -1,20 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {
-	Table 
-} from 'reactstrap';
-import { 
-	Spinner,
-	Button 
-} from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faSearch,
-  faCheckCircle
-} from '@fortawesome/free-solid-svg-icons'
-import Book from './Book';
-// import SwitchButtons from './SwitchButton'
+
+import SwitchButton from './SwitchButton'; 
+import Book from './Book'
 import { useHistory } from "react-router-dom";
+
+import {Table} from 'reactstrap';
+import { Spinner,Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faSearch,faCheckCircle} from '@fortawesome/free-solid-svg-icons'
 
 const Books = (props)=> {
 	const [books, setBook] = useState([]);
@@ -97,7 +91,7 @@ const Books = (props)=> {
 				>Chargement...</span>
 			</Spinner> } 
 			
-
+			<SwitchButton />
 			<Book/>
 			
 			<Button 
@@ -178,12 +172,12 @@ const Books = (props)=> {
 								<FontAwesomeIcon icon={faSearch} />
 							</Button>
 			
-              <Button
-                style={{ whiteSpace: "pre" }}
-                variant="outline-danger"
-                size="sm"
-                onClick={()=> {deleteBook(book.bookID)}}
-              > X
+							<Button
+								style={{ whiteSpace: "pre" }}
+								variant="outline-danger"
+								size="sm"
+								onClick={()=> {deleteBook(book.bookID)}}
+							> X
 							</Button>
 						</td>
 							

@@ -16,12 +16,12 @@ const Bookings = ()=> {
 
 	useEffect(() => {
 		const fetchBook = async () => {
-			fetch('/api/book_borrowed/')
+			fetch('/api/bookborrowed/')
 				.then(res => res.json())
 				.then(data => {
 					setBook(data)
 					console.log(data)
-					console.log(moment(data.returned_at).utc().format('MM/DD/YYYY'))
+					// console.log(moment(data.returned_at).utc().format('MM/DD/YYYY'))
 
 				})
 				.catch(err => {
@@ -66,7 +66,6 @@ const Bookings = ()=> {
 
 						</tr>
 							
-
 					)}
 					
 				</tbody>
