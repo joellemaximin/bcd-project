@@ -13,7 +13,7 @@ router.get("/", async (req,res) => {
     res.send(result);
     console.log(result);
   })
-}); 
+});
 
 // post router
 router.post("/", async (req, res) => {
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
   pool.query('INSERT INTO books SET ?', postData, function (error, results, fields) {
     if (error) throw error;
     res.send(results);
-  });
+  }); 
 });
 
 //get one book
@@ -120,13 +120,15 @@ router.get('/order/author', async (req, res)=>{
 
 //matched any characters from title column from a to z
 
-router.get('/search?/:title', async (req, res)=>{
+router.get(`/sasa`, async (req, res)=>{
   // const matched_character = 'select * from books where title like" %' + req.params.title + '% ";'
-  const matched_character = 'select * from books where title like "%' + [req.params.title] + '%";'
+  // console.log(query)
+  const matched_character = 'select bookID, title from books where title like "%' + [req.params.title] + '%"';
   pool.query(matched_character, function (err, result){
     if (err) throw err;
-    res.send(result);
-    console.log(result);
+    
+    JSON.stringify(result);
+    res.send({ books: result });
 
   });
 })

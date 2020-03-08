@@ -1,5 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
+import { useAlert } from 'react-alert'
 import FormControl from 'react-bootstrap/FormControl';
 import {
   Col,
@@ -11,7 +12,7 @@ import {
 from 'reactstrap';
 
 const AddBook = (props) => {
-  
+  // const alert = useAlert()
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(
@@ -19,6 +20,7 @@ const AddBook = (props) => {
   );
   //  title_category: '', , category_id: ''
   const [categories, setCategory] = useState([]);
+
 
   const handleInputChange = event => {
     event.persist();
@@ -39,6 +41,7 @@ const AddBook = (props) => {
       console.log(error)
     })  
     .then(function (response) {
+
       props.history.push('/')
       console.log(response)
     })
@@ -46,7 +49,7 @@ const AddBook = (props) => {
 
 	
 	useEffect(() => {
-		const fetchBook = async () => {
+		const fetchCategories = async () => {
 			setShowLoading(true)
       fetch('/api/categories')
 				.then(res => res.json())
@@ -59,14 +62,14 @@ const AddBook = (props) => {
 					console.log(err)
 				})
 		}
-		fetchBook();
+		fetchCategories();
 	}, []);
 
 
 return (
   <div>
     <Form onSubmit={addBook} >
-      <FormGroup  row>
+      <FormGroup row>
         <Label sm={2}>
             Nom du livre
         </Label>

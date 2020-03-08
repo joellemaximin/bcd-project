@@ -11,28 +11,28 @@ import { useHistory } from "react-router-dom";
 
 const Bookings = ()=> {
 	const [books, setBook] = useState([]);
-	// const [error, setError] = React.useState(null);
+	const [showLoading, setShowLoading] = useState(true);
+	const [error, setError] = React.useState(null);
 	const history = useHistory()
 
+	
+	const fetchBook = async () => {
+		setShowLoading(true)
+		await fetch('/api/bookborrowed/')
+			.then(res => res.json())
+			.then(data=> {
+				setShowLoading(false)
+        setBook(data)
+        console.log(data)
+			})
+      .catch(err => {
+        setError(err)
+		  })
+	}
+		
 	useEffect(() => {
-		const fetchBook = async () => {
-			fetch('/api/bookborrowed/')
-				.then(res => res.json())
-				.then(data => {
-					setBook(data)
-					console.log(data)
-					// console.log(moment(data.returned_at).utc().format('MM/DD/YYYY'))
-
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		}
 		fetchBook();
 	}, []);
-
-
-
 
 	
 

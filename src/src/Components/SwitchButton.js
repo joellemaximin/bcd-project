@@ -18,7 +18,7 @@ const SwitchButtons = (props)=> {
 	
 	useEffect(() => {
 		const fetchBook = async () => {
-			fetch('/api/bookrouter')
+			fetch('/api/bookrouter/')
 				.then(res => res.json())
 				.then(data => {
 					setBook(data)

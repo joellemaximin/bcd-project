@@ -6,20 +6,8 @@ const pool = require("../middleware/dbConnect")
 router.use(express.json());
 
 
-//counter books read by students every 3 months
-// router.get('/book-read-by-student/:id', async (req, res)=>{
-//     const bookFrommstudent = 'SELECT title FROM books AND name FROM students INNER JOIN book_borrowed ON books.`category_id`=categories.`id`';
-//     pool.query(bookFrommstudent, function (err, result){
-//       if (err) throw err;
-//       res.send(result);
-//       console.log(result);
-  
-//     });
-// })
-
-
 router.get("/", async (req, res) => {
-  const getAllBooking = 'SELECT book_borrowed.*, students.`name`, books.`title` from `book_borrowed` JOIN students ON students.`id` = `book_borrowed`.`student_id` JOIN books ON `books`.`bookID` = `book_borrowed`.`book_id` ';
+  const getAllBooking = 'SELECT book_borrowed.*, students.`name`, books.`title` from book_borrowed INNER JOIN students ON `book_borrowed`.`student_id` = students.`id` INNER JOIN books ON `book_borrowed`.`book_id` = `books`.`bookID`';
   pool.query(getAllBooking, function (err, result){
     if (err) throw err;
     res.send(result);
@@ -29,16 +17,29 @@ router.get("/", async (req, res) => {
 });
 
 
+// post router
 
+// router.post("/", async (req, res) => {
+
+//   var postData  = req.body;
+//   const sql = 'INSERT INTO book_borrowed SET ?'
+//   pool.query(sql, postData, function (error, result, fields) {
+//   console.log(req.body, "boookbowed")
+
+//   if (error) throw error;
+//   // res.status(200).json(results);
+//   res.send(result);
+//   });
+// });
 router.post("/", async (req, res) => {
-  try {
-    const book_borrowed = await db.add(req.body);
-    console.log(req.body)
-    res.status(200).json(book_borrowed);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-}); 
+  var postData  = req.body;
+  console.log(req.body)
+  pool.query('INSERT INTO book_borrowed SET ?', postData, function (error, results, fields) {
+    if (error) throw error;
+    res.send(results);
+  }); 
+});
+
 
 //sum quantity of books read by students every months in one year
 

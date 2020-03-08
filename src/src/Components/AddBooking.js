@@ -14,37 +14,48 @@ import {
 	FormControl
 } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
+
+
 const AddBooking = (props)=> {
   const [inputs, setInputs] = useState(
-    {title: '', name: '', numberOfdays: '', returned_at: '', start_date: ''}
+    {numberOfdays: '', returned_at: '', start_date: ''}
   );
   const [students, setStudents] = useState([]);
   const [books, setBooks] = useState([]);
+  const [showLoading, setShowLoading] = useState(false);
+
+	const handleInputChange = event => {
+	event.persist();
+	setInputs({
+    ...inputs,
+    [event.target.name]: event.target.value});
+	}
+
+  const addBooking = async (e) => {
+    setShowLoading(true);
+    e.preventDefault()
+	  axios.post('/api/bookborrowed/', inputs)
+	  .catch(function (error) {
+		  console.log(error)
+	  })  
+    .then(function (response) {
+      setShowLoading(false);
+      props.history.push('/booking-book')
+		  console.log(response)
+	  })
+
+	}
 
 
 	useEffect(() => {
-		const fetchBook = async () => {
-			fetch('/api/bookborrowed/')
-			.then(res => res.json())
-			.then(data => {
-				setInputs(data)
-			})
-			.catch(err => {
-				console.log(err)
-			})
-		}
-		fetchBook();
-	}, []);
-
-	useEffect(() => {
-		const fetchBook = async () => {
+		const fetchStudents = async () => {
 			fetch('/api/students/')
 				.then(res => res.json())
 				.then(data => {
 					setStudents(data)
 				})
 		}
-		fetchBook();
+		fetchStudents();
 	}, []);
 
 	useEffect(() => {
@@ -59,39 +70,12 @@ const AddBooking = (props)=> {
 	}, []);
 
 
-	const addBooking = async (e) => {
-    e.preventDefault()
-    axios.post('/api/bookborrowed/', inputs,
-      {
-      validateStatus: function (status) {
-      return status < 600; // Reject only if the status code is greater than or equal to 500
-      }}
-    )
-    .catch(function (error) {
-      console.log(error)
-    })  
-    .then(function (response) {
-			props.history.push('/booking-book')
-			
-      console.log(response)
-    })
-  }
-
-  const handleInputChange = event => {
-    event.persist();
-    setInputs({
-      ...inputs,
-      [event.target.name]: event.target.value});
-	}
-	
 
 
 	return (
 		<div className="books-home">
 			<Container>
 				<Form onSubmit={addBooking} >
-
-
 					<FormGroup row>
 						<Label sm={2}>
 								Choisir l'élève
@@ -99,12 +83,12 @@ const AddBooking = (props)=> {
 						<Col sm={6}>
 							<FormControl 
 								as="select"
-								name="name"
+								name="student_id"
 								onChange={handleInputChange}
 							>
-								
+
 							{students.map((student, key) => 
-								<option value={student.id}  key={key} className="" >{student.name}</option>
+								<option value={student.id} key={key}>{student.name}</option>
 							)}
 							
 							</FormControl>       
@@ -119,12 +103,12 @@ const AddBooking = (props)=> {
 						<Col sm={6}>
 							<FormControl 
 								as="select"
-								name="title"
+								name="book_id"
 								onChange={handleInputChange}
 							>
 								
 							{books.map((book, key) => 
-								<option value={book.id}  key={key} className="" >{book.title}</option>
+								<option value={book.bookID} key={key}>{book.title}</option>
 							)}
 							
 							</FormControl>       

@@ -62,16 +62,16 @@ const AddCate = () => {
 		<div>
 				<Form onSubmit={submitAdd} >
 						<FormGroup  row>
-								<Label sm={2}>
+							<Label sm={2}>
 						Niveau d'élève
 						</Label>
 						<Col sm={6}>
 						<Input
-								type="text"
-								value= {inputs.title_category || ""}
-								onChange={handleInputChange}
-								name="title_category"
-								required
+							type="text"
+							value= {inputs.title_category || ""}
+							onChange={handleInputChange}
+							name="title_category"
+							required
 						/>
 						</Col>
 				</FormGroup>

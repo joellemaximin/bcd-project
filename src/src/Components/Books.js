@@ -24,6 +24,7 @@ const Books = (props)=> {
 			.then(data => {
 				setShowLoading(false)
 				setBook(data)
+				console.log(data)
 			})
 			.catch(err => {
 				console.log(err)
@@ -86,12 +87,11 @@ const Books = (props)=> {
 		<div className="books-home">
 			
 			{showLoading && <Spinner animation='border' role='status' >
-				<span className="sr-only"
-				
-				>Chargement...</span>
+				<span className="sr-only">Chargement...</span>
 			</Spinner> } 
 			
-			<SwitchButton />
+			{/* <SwitchButton /> */}
+
 			<Book/>
 			
 			<Button 
