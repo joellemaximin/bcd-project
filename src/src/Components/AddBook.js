@@ -41,9 +41,8 @@ const AddBook = (props) => {
       console.log(error)
     })  
     .then(function (response) {
-
       props.history.push('/')
-      console.log(response)
+      // console.log(response)
     })
   }
 
@@ -139,8 +138,6 @@ return (
           <FormControl 
             as="select"
             name="category_id"
-            // value={inputs.category_id|| ""}
-            // value={category.id} 
             onChange={handleInputChange}
           >
             

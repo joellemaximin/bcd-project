@@ -10,65 +10,71 @@ import {
   Button}
 from 'reactstrap';
 import Spinner from 'react-bootstrap/Spinner';
+import { useParams, useHistory } from 'react-router-dom';
 
 
-const EditBook = ({match, props})=> {
+const EditBook = ({match})=> {
   
   const [showLoading, setShowLoading, reset] = useState(true);
   const [inputs, setInputs] = useState([]);
   let id = match.params.id
   const [categories, setCategory] = useState([]);
-  const [items, setData] = useState({title:"", collection:"", author:"", oeuvre:"", editor:""});
+  const [items, setData] = useState({title:'', collection:'', author:'', oeuvre:'', editor:''});
+	const history = useHistory()
 
-  //  const url = `/api/bookrouter/edit-book/${id}`
-	
+
+
+  const handleInputChange=(e)=> {
+    e.persist();
+    const newData={...items}
+    newData[e.currentTarget.name]=e.currentTarget.value 
+    setData(newData);
+    // setData({
+    //   ...items,
+    //   [e.currentTarget.name]: e.currentTarget.value});
+  }
+
+  const submit = async (e) => {
+    e.preventDefault()
+    axios.put(`/api/bookrouter/editbook/${id}`, items,
+      {
+      validateStatus: function (status) {
+      return status < 600; // Reject only if the status code is greater than or equal to 500
+      }}
+    )
+    .catch(function (error) {
+      console.log(error)
+    })  
+    .then(function (response) {
+      // props.history.push('/')
+      console.log(response)
+    })
+  }
+  
 	useEffect(()=>{
     const fetchBook = async () => {
+      // const id = props.match.params.id
       const response = await fetch(`/api/bookrouter/show-book/${id}`)
       const data = await response.json();
-      console.log(data)
+      //console.log(data)
 		  setData(data[0])
     }
 		fetchBook();
   }, [id]);
   
-  // const submit = async (id) => {
-	// 	const delteUrl = '/api/bookrouter/delete/book/' + id;
 
-	// 	setShowLoading(true);
+  // function submit(e){
+  //   e.preventDefault()
+  //   alert(`eeee ${items}`)
 
-	// 	axios.delete(delteUrl)
-	// 		.then((result) => {  
-	// 			props.history.push('/')  
-	// 			console.log(result)
-
-	// 		});
-		
-	// }
-  function submit(e){
-    e.preventDefault()
-    alert(`eeee ${items}`)
-
-    axios.put(`/api/bookrouter/editbook/${id}`, items)
-    .then(response =>{
-      console.log(response.data)
-      props.history.push('/')
-    })
-    .catch(function (error) {
-      console.log(error)
-    }) 
-    
-
-  }
-
-
-  function handleInputChange(e) {
-    e.persist();
-    const newData={...items}
-    newData[e.currentTarget.name]=e.currentTarget.value 
-    setData(newData);
-  }
-
+  //   axios.put(`/api/bookrouter/editbook/${id}`, items)
+  //   .catch(function (error) {
+  //     console.log(error)
+  //   }) 
+  //   .then(response =>{
+  //     console.log(response)
+  //   })
+  // }
 
   useEffect(() => {
 		const fetchCategories = async () => {
@@ -86,13 +92,9 @@ const EditBook = ({match, props})=> {
 		fetchCategories();
   }, []);
 
-  // const handleInputChange = event => {
-  //   event.persist();
-  //   setData({
-  //     ...items,
-  //     [event.target.name]: event.target.value});
-  // }
-  
+
+
+
   return (
   <div>
     {showLoading &&
@@ -100,7 +102,7 @@ const EditBook = ({match, props})=> {
         <span className="sr-only">Loading...</span>
       </Spinner>
     }
-      <Form  >
+      <Form onSubmit={submit} >
         <FormGroup row>
           <Label sm={2}>
               Nom du livre
@@ -163,15 +165,14 @@ const EditBook = ({match, props})=> {
               Genre
           </Label>
           <Col sm={6}>
-    
             <FormControl 
               as="select"
               name="category_id"
               onChange={handleInputChange}
-              >
+            >
               
             {categories.map((category, key) => 
-              <option value={category.id}  key={key} className="" >{category.title_category}</option>
+              <option value={category.id}  key={key} >{category.title_category}</option>
             )}
             
             </FormControl>  
@@ -197,7 +198,6 @@ const EditBook = ({match, props})=> {
           <Button
             className="waves-effect waves-light btn"
             type="submit"
-            onClick={submit} 
           > Enregistrer
           </Button>
         </div>

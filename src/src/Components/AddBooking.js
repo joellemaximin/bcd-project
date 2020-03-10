@@ -41,7 +41,6 @@ const AddBooking = (props)=> {
     .then(function (response) {
       setShowLoading(false);
       props.history.push('/booking-book')
-		  console.log(response)
 	  })
 
 	}

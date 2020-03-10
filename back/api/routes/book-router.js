@@ -39,7 +39,7 @@ router.get('/show-book/:id', async (req, res) => {
 
 router.put('/editbook/:id', async (req, res) => {
   const putData = req.body;
-  pool.query('UPDATE books SET ? WHERE bookID = ? ', [putData, req.params.id], function(error, results, fields) {
+  pool.query('UPDATE books SET ? WHERE bookID = ?',[putData, req.params.id], function(error, results, fields) {
     if (error) throw error;
     res.send(results);
   });
@@ -120,10 +120,10 @@ router.get('/order/author', async (req, res)=>{
 
 //matched any characters from title column from a to z
 
-router.get(`/sasa`, async (req, res)=>{
-  // const matched_character = 'select * from books where title like" %' + req.params.title + '% ";'
+router.get(`/search?`, async (req, res)=>{
+  //const matched_character = 'select bookID, title from books where title like "%' + [req.params.title] + '%"';
   // console.log(query)
-  const matched_character = 'select bookID, title from books where title like "%' + [req.params.title] + '%"';
+  const matched_character = 'select title from books where title LIKE "?%" ';
   pool.query(matched_character, function (err, result){
     if (err) throw err;
     

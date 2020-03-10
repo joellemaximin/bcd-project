@@ -18,19 +18,6 @@ router.get("/", async (req, res) => {
 
 
 // post router
-
-// router.post("/", async (req, res) => {
-
-//   var postData  = req.body;
-//   const sql = 'INSERT INTO book_borrowed SET ?'
-//   pool.query(sql, postData, function (error, result, fields) {
-//   console.log(req.body, "boookbowed")
-
-//   if (error) throw error;
-//   // res.status(200).json(results);
-//   res.send(result);
-//   });
-// });
 router.post("/", async (req, res) => {
   var postData  = req.body;
   console.log(req.body)

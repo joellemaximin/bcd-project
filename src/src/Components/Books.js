@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 import SwitchButton from './SwitchButton'; 
-import Book from './Book'
+//import Book from './Book'
 import { useHistory } from "react-router-dom";
 
 import {Table} from 'reactstrap';
@@ -15,6 +15,10 @@ const Books = (props)=> {
 	const [showLoading, setShowLoading] = useState(true);
 	// const [error, setError] = React.useState(null);
 	const [counter, setCounter] = useState([]);
+	//const [data ,setData] = useState([]);
+	const [filtered ,setFilterd] = useState([]);
+	const [result , setResult] = useState("");
+
 	const history = useHistory()
 
 	const fetchBook = async () => {
@@ -24,6 +28,8 @@ const Books = (props)=> {
 			.then(data => {
 				setShowLoading(false)
 				setBook(data)
+				// setData(data);
+				setFilterd(data);
 				console.log(data)
 			})
 			.catch(err => {
@@ -49,13 +55,15 @@ const Books = (props)=> {
 		const delteUrl = '/api/bookrouter/delete/book/' + id;
 
 		setShowLoading(true);
+		// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
 
-		axios.delete(delteUrl)
+			axios.delete(delteUrl)
 			.then((result) => {  
 				props.history.push('/')  
 				console.log(result)
 
 			});
+		// }
 		
 	}
 
@@ -77,6 +85,19 @@ const Books = (props)=> {
 		console.log('available ? yes : no')
 	}
 
+	
+
+	useEffect(()=> {
+	const results = filtered.filter(res=> res.title.toLowerCase().includes(result)
+
+	); 
+	setBook(results)
+	} ,[result])
+	
+	const onChange =(e)=> {
+		setResult(e.target.value);
+	}
+
 	useEffect(() => {
 		getCount();
 		fetchBook();
@@ -92,8 +113,14 @@ const Books = (props)=> {
 			
 			{/* <SwitchButton /> */}
 
-			<Book/>
-			
+			<input 
+				type="text"
+				placeholder="serch here .."
+				value={result}
+				onChange={onChange}
+			/>	
+
+
 			<Button 
 				variant="outline-primary"
 				size="sm"
