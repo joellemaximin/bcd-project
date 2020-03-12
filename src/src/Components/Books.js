@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 import SwitchButton from './SwitchButton'; 
-//import Book from './Book'
 import { useHistory } from "react-router-dom";
-
 import {Table} from 'reactstrap';
 import { Spinner,Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,10 +13,9 @@ const Books = (props)=> {
 	const [showLoading, setShowLoading] = useState(true);
 	// const [error, setError] = React.useState(null);
 	const [counter, setCounter] = useState([]);
-	//const [data ,setData] = useState([]);
 	const [filtered ,setFilterd] = useState([]);
 	const [result , setResult] = useState("");
-
+	const [available , setAvailable] = useState({});
 	const history = useHistory()
 
 	const fetchBook = async () => {
@@ -28,9 +25,8 @@ const Books = (props)=> {
 			.then(data => {
 				setShowLoading(false)
 				setBook(data)
-				// setData(data);
-				setFilterd(data);
-				console.log(data)
+				setFilterd(data);//filter update of tiltes
+				// console.log(data)
 			})
 			.catch(err => {
 				console.log(err)
@@ -81,11 +77,7 @@ const Books = (props)=> {
 		})
 	}
 	
-	function available(){
-		console.log('available ? yes : no')
-	}
-
-	
+	//componentDidMount? apres entrer 
 
 	useEffect(()=> {
 	const results = filtered.filter(res=> res.title.toLowerCase().includes(result)
@@ -96,6 +88,10 @@ const Books = (props)=> {
 	
 	const onChange =(e)=> {
 		setResult(e.target.value);
+	}
+
+	const bookAvailable = ()=> {
+		console.log('available ? yes : no')
 	}
 
 	useEffect(() => {
@@ -115,7 +111,7 @@ const Books = (props)=> {
 
 			<input 
 				type="text"
-				placeholder="serch here .."
+				placeholder="recherchez un livre .."
 				value={result}
 				onChange={onChange}
 			/>	

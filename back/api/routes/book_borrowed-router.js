@@ -30,29 +30,43 @@ router.post("/", async (req, res) => {
 
 //sum quantity of books read by students every months in one year
 
-router.get('/time-left-allbook', async (req, res)=>{
-
-  var DateEmpruntCalcule = 'SELECT id, (UNIX_TIMESTAMP(DATE_ADD(start_date, INTERVAL numberOfdays DAY)) - UNIX_TIMESTAMP(NOW())) / 3600 / 24 timeleft FROM book_borrowed WHERE returned_at is null';
+router.get('/time-left-allbook/', async (req, res)=>{
+//Select id, (UNIX_TIMESTAMP(DATE_ADD(`start_date`, INTERVAL numberOfDays DAY)) - UNIX_TIMESTAMP(NOW())) / 3600 / 24 as time_before_returning from `book_borrowed`
+  var DateEmpruntCalcule = 'SELECT students.`name`, books.`title`, (UNIX_TIMESTAMP(DATE_ADD(`start_date`, INTERVAL numberOfDays DAY)) - UNIX_TIMESTAMP(NOW())) / 3600 / 24 as timeleft from `book_borrowed` INNER JOIN students ON `book_borrowed`.`student_id` = students.`id` INNER JOIN books ON `book_borrowed`.`book_id` = `books`.`bookID`';
+  // let DateEmpruntdateeCalcule = parseInt(DateEmpruntCalcule);
   pool.query(DateEmpruntCalcule, function (err, result){
+  //  for(var i = 0; i < result.length; i++) {
+  //   console.log(parseInt(result[i].DateEmpruntCalcule));
+  //}
+
+  //console.log(isNaN(DateEmpruntCalcule))
+
 
     if (DateEmpruntCalcule <=  0) {
+     // console.log(statusEmprunt)
       statusEmprunt = 'Livre en retard'
-      console.log(statusEmprunt)
+      // console.log(DateEmpruntCalcule, + 'eafaeienfain')
       res.send(result)
     } 
 
     else if (DateEmpruntCalcule >= 3 ) {
+      //console.log(statusEmprunt)
       statusEmprunt = 'Le livre doit ëtre rendu dans moins de trois jours'
+      res.send(result)
     }
 
     else if (DateEmpruntCalcule == 1){
+
+     console.log(statusEmprunt)
+     
       statusEmprunt = 'Le livre doit ëtre rendu demain'
+      res.send(result)
     }
 
     else {
       statusEmprunt = "cool"
-      console.log(statusEmprunt)
-      res.send((result))
+      //console.log(statusEmprunt)
+      res.send(result)
 
     }
   })

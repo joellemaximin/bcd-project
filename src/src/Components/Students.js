@@ -21,6 +21,8 @@ const Students = (props)=> {
 	const [showLoading, setShowLoading] = useState(true);
 	const [error, setError] = React.useState(null);
 	const history = useHistory()
+	const [filtered ,setFilterd] = useState([]);
+	const [result , setResult] = useState("");
 
 	useEffect(() => {
 		const fetchBook = async () => {
@@ -30,6 +32,7 @@ const Students = (props)=> {
 				.then(data => {
 					setShowLoading(false)
 					setStudents(data)
+					setFilterd(data);
 				})
 				.catch(err => {
 					console.log(err)
@@ -64,6 +67,17 @@ const Students = (props)=> {
 		});
 	}
 
+	useEffect(()=> {
+		const results = filtered.filter(res=> res.name.toLowerCase().includes(result)
+	
+		); 
+	setStudents(results)
+	} ,[result])
+	
+	const onChange =(e)=> {
+		setResult(e.target.value);
+	}
+	
 //display books readed or reading by students.. get title, name from books borrowed  
 
 	if (students.showLoading) return <Spinner animation='border' role='status' >
@@ -78,7 +92,14 @@ const Students = (props)=> {
 					<span className="sr-only">Chargement...</span>
 				</Spinner> 
 			}
-		
+
+			<input 
+				type="text"
+				placeholder="search here .."
+				value={result}
+				onChange={onChange}
+			/>
+
 			<Button onClick={() => history.push('/add-student') } >Ajouter un élève </Button>
 
 			<Table striped bordered hover >
