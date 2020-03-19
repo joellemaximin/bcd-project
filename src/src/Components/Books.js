@@ -49,21 +49,21 @@ const Books = (props)=> {
 		});
 	}
 
-	// const deleteBook = async (id) => {
-	// 	const delteUrl = '/api/bookrouter/delete/book/' + id;
+	const deleteBook = async (id) => {
+		const delteUrl = '/api/bookrouter/delete/book/' + id;
 
-	// 	setShowLoading(true);
-	// 	// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
+		setShowLoading(true);
+		// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
 
-	// 		axios.delete(delteUrl)
-	// 		.then((result) => {  
-	// 			props.history.push('/');
-	// 			console.log(result)
+			axios.delete(delteUrl)
+			.then((result) => {  
+				props.history.push('/');
+				console.log(result)
 
-	// 		});
-	// 	// }
+			});
+		// }
 		
-	// }
+	}
 
 
 	function getCount() {
@@ -82,17 +82,13 @@ const Books = (props)=> {
 	//componentDidMount? apres entrer 
 
 	useEffect(()=> {
-		const results = filtered.filter(res=> res.title.toLowerCase().includes(result)
-
-		); 
+		const results = filtered.filter(res=> res.title.toLowerCase().includes(result)); 
 		setBook(results)
 	} ,[result])
 	
 	const onChange =(e)=> {
 		setResult(e.target.value);
 	}
-
-
 
 	useEffect(() => {
 		getCount();
@@ -102,7 +98,7 @@ const Books = (props)=> {
 
 	
 	return (
-		<div className="App">
+		<div className="books-home">
 			{/* <SwitchButton /> */}
 			
 			{showLoading && <Spinner animation='border' role='status' >
@@ -190,14 +186,13 @@ const Books = (props)=> {
 							</Button>
 			
 						
-							{/* {!show && 
-								<button
-									onClick={openModal}
-								> X
-								</button>
-							}
-							<Modal closeModal={closeModal} show={show} /> */}
-
+							<Button	
+								style={{ whiteSpace: "pre" }}
+								variant="outline-danger"
+								size="sm"	
+								onClick={()=> {deleteBook(book.bookID)}}
+							> X
+							</Button>
 							
 						</td>
 							

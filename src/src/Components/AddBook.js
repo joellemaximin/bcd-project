@@ -1,6 +1,5 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-import { useAlert } from 'react-alert'
 import FormControl from 'react-bootstrap/FormControl';
 import {
   Col,
@@ -12,7 +11,6 @@ import {
 from 'reactstrap';
 
 const AddBook = (props) => {
-  // const alert = useAlert()
 	const [showLoading, setShowLoading] = useState(true);
   // const [location, classes, history] = props;
   const [inputs, setInputs] = useState(

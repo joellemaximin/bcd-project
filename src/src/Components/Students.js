@@ -53,10 +53,8 @@ const Students = (props)=> {
 		const deleteUrl = '/api/students/delete/' + id;
 			axios.delete(deleteUrl)
 			.then((result) => {  
-
 				props.history.push('/students-list')  
-				console.log(result)
-
+				//console.log(result)
 			});
 		
 	}
@@ -68,10 +66,8 @@ const Students = (props)=> {
 	}
 
 	useEffect(()=> {
-		const results = filtered.filter(res=> res.name.toLowerCase().includes(result)
-	
-		); 
-	setStudents(results)
+		const results = filtered.filter(res=> res.name.toLowerCase().includes(result)); 
+		setStudents(results)
 	} ,[result])
 	
 	const onChange =(e)=> {

@@ -16,7 +16,7 @@ const Bookings = ()=> {
   	const [hasError, setErrors] = useState(false);
 	const history = useHistory()
 	const [time, setTimer] = useState([])
-	const [message, setMessage] = useState('')
+	// const [message, setMessage] = useState('')
 
 
   const fetchBook = async () => {
@@ -25,51 +25,34 @@ const Bookings = ()=> {
 		.then(res => res.json())
 		.then(data=> {
 			setShowLoading(false)
-			//setBook(data)
+			setBook(data)
 			console.log(data)
-			
-			
-				setBook(data)
-			
-
 		})
 		.catch(err => setErrors(err))
 
 	}
-	// if(data.length === 0 ){
-	// 	setMessage({message:'Pas de livres emprunté'}
-			
-	// 	)
-	// } else {
-	// 	setMessage({message:'Liste des livres emprunté'}
-	// 		console.log({message})
-	//  )
 
 
 	const fetchTime = async () => {
 		const res	= await fetch('/api/bookborrowed/time-left-allbook/')
 		res
-      .json()
-      .then(res=> setTimer(res))
-      .catch(err => setErrors(err))
+			.json()
+			.then(res=> setTimer(res))
+			.catch(err => setErrors(err))
 	}	
-	// let data = parseInt({data})
 	// var dataF = isNaN(parseInt(data)) ? 0 : parseInt(data);
 		
 
 	const deleteBooking = async () => {
-		const delteUrl = '/api/bookborrowed/delete/book/'
-
+		const delteUrl = '/api/bookborrowed/delete/old-books/'
 		setShowLoading(true);
 		// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
-			axios.delete(delteUrl)
-			.then((result) => {  
-				// props.history.push('/');
-				console.log(result)
+		axios.delete(delteUrl)
+		.then((result) => {  
+			// props.history.push('/booking-book');
+			console.log(result)
 
-			});
-		// }
-		
+		});		
 	}
 
 	useEffect(() => {
@@ -90,11 +73,12 @@ const Bookings = ()=> {
 			>
 			Choisir un livre pour un élève
 			</Button>
+{/*
       	{
 			(message !== '' || books.length === 0 && <p className='text-danger'>{message}</p>)
 		}
-	    	{
-				books.length > 0 &&
+	    	 {
+				books.length > 0 && */}
 					<Table striped bordered hover>
 					<thead>
 						<tr>
@@ -120,7 +104,7 @@ const Bookings = ()=> {
 						
 					</tbody>
 				</Table>
-			} 
+			{/* }  */}
 			
 
       		<h3>Liste des élèves qui lisent et nombre de jours restant</h3>
@@ -140,7 +124,9 @@ const Bookings = ()=> {
 				variant="outline-danger"
 				size="sm"
 				//faire apparaitre une boxe de confirmation si suppression de beaucoup de livres en les affichant
-				onClick={()=> {if(window.confirm('Are you sure to delete this record?')){deleteBooking()}}}
+				onClick={()=> {
+					deleteBooking()}
+				}
 				> Supprimé les livres dépassés
 			</Button>
 
