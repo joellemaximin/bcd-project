@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import {
 	Table 
 } from 'reactstrap';
@@ -12,98 +13,144 @@ import { useHistory } from "react-router-dom";
 const Bookings = ()=> {
 	const [books, setBook] = useState([]);
 	const [isLoading, setShowLoading] = useState(true);
-  const [hasError, setErrors] = useState(false);
+  	const [hasError, setErrors] = useState(false);
 	const history = useHistory()
 	const [time, setTimer] = useState([])
+	const [message, setMessage] = useState('')
 
-	const fetchBook = async () => {
+
+  const fetchBook = async () => {
 		setShowLoading(true)
 		await fetch('/api/bookborrowed/')
 		.then(res => res.json())
 		.then(data=> {
 			setShowLoading(false)
-			setBook(data)
-			//console.log(data)
+			//setBook(data)
+			console.log(data)
+			
+			
+				setBook(data)
+			
+
 		})
 		.catch(err => setErrors(err))
 
 	}
+	// if(data.length === 0 ){
+	// 	setMessage({message:'Pas de livres emprunté'}
+			
+	// 	)
+	// } else {
+	// 	setMessage({message:'Liste des livres emprunté'}
+	// 		console.log({message})
+	//  )
 
 
 	const fetchTime = async () => {
-    // const datas = {timeleft: parseInt(datas.timeleft)}
 		const res	= await fetch('/api/bookborrowed/time-left-allbook/')
 		res
-			.json()
-			.then(res=> setTimer(res))
-			.catch(err => setErrors(err))
-
-	}	// var dataF = isNaN(parseInt(data)) ? 0 : parseInt(data);
-		// let data = parseInt({data})
+      .json()
+      .then(res=> setTimer(res))
+      .catch(err => setErrors(err))
+	}	
+	// let data = parseInt({data})
+	// var dataF = isNaN(parseInt(data)) ? 0 : parseInt(data);
 		
-	
 
+	const deleteBooking = async () => {
+		const delteUrl = '/api/bookborrowed/delete/book/'
+
+		setShowLoading(true);
+		// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
+			axios.delete(delteUrl)
+			.then((result) => {  
+				// props.history.push('/');
+				console.log(result)
+
+			});
+		// }
+		
+	}
 
 	useEffect(() => {
 		fetchBook();
 		fetchTime();
 	}, []);
-
+	
+	
 	
 	
 	
 	return (
 		<div className="books-home">
-			{isLoading && <p>Wait I'm Loading comments for you</p>}
+			{/* {isLoading && <p>Wait I'm Loading comments for you</p>} */}
 
 			<Button 
 				onClick={() => history.push('/add-booking') }
 			>
 			Choisir un livre pour un élève
 			</Button>
-     
-	 
-			<Table striped bordered hover>
-				<thead>
-					<tr>
-						<th>NOM/LIVRE</th>
-						<th>ELEVES</th>
-						<th>DATE D'EMPRUNT</th>
-						<th>DATE de RETOUR</th>
-						<th>NOMBRE de jours pris</th>
-					</tr>
-				</thead>
-				<tbody>
-					{books.map((book, key) => 
-						<tr key={key} className="">
-							<td>{book.title}</td>
-							<td>{book.name}</td>
-							<td>{moment(book.start_date).utc().format('MM/DD/YYYY')}</td>
-							<td>{moment(book.returned_at).utc().format('MM/DD/YYYY')}</td>
-							<td>{book.numberOfdays} jours</td>
+      	{
+			(message !== '' || books.length === 0 && <p className='text-danger'>{message}</p>)
+		}
+	    	{
+				books.length > 0 &&
+					<Table striped bordered hover>
+					<thead>
+						<tr>
+							<th>NOM/LIVRE</th>
+							<th>ELEVES</th>
+							<th>DATE D'EMPRUNT</th>
+							<th>DATE de RETOUR</th>
+							<th>NOMBRE de jours pris</th>
 						</tr>
-							
-					)}
-					
-				</tbody>
-			</Table>
+					</thead>
+					<tbody>
+						{books.map((book, key) => 
+							<tr key={key} className="">
+								<td>{book.title}</td>
+								<td>{book.name}</td>
+								<td>{moment(book.start_date).utc().format('MM/DD/YYYY')}</td>
+								<td>{moment(book.returned_at).utc().format('MM/DD/YYYY')}</td>
+								<td>{book.numberOfdays} jours</td>
+								
+							</tr>
+								
+						)}
+						
+					</tbody>
+				</Table>
+			} 
+			
 
-            <h3>Liste des élèves qui lisent et nombre de jours restant</h3>
+      		<h3>Liste des élèves qui lisent et nombre de jours restant</h3>
 			{
 				time.map((book, key) => 
 				
 					<ul key={key}>
 						<ol>{book.title}</ol>
 						<ol>{book.name}</ol>
-
-						<ol>{isNaN(parseInt(book.timeleft)) ? 0 : parseInt(book.timeleft)}</ol>
+						<ol>{isNaN(parseInt(book.timeleft)) ? 0 : parseInt(book.timeleft)} jours</ol>
 					</ul>
 				)
-			}  
+			} 
+
+			<Button
+				style={{ whiteSpace: "pre" }}
+				variant="outline-danger"
+				size="sm"
+				//faire apparaitre une boxe de confirmation si suppression de beaucoup de livres en les affichant
+				onClick={()=> {if(window.confirm('Are you sure to delete this record?')){deleteBooking()}}}
+				> Supprimé les livres dépassés
+			</Button>
+
+     
 		</div>
 	
 	)
 	 
 }
+
+//if(window.confirm('Are you sure to delete this record?')){deleteBook(book.bookID)}}}
 
 export default Bookings;

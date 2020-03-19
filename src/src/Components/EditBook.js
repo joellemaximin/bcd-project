@@ -16,7 +16,6 @@ import { useParams, useHistory } from 'react-router-dom';
 const EditBook = ({match})=> {
   
   const [showLoading, setShowLoading, reset] = useState(true);
-  const [inputs, setInputs] = useState([]);
   let id = match.params.id
   const [categories, setCategory] = useState([]);
   const [items, setData] = useState({title:'', collection:'', author:'', oeuvre:'', editor:''});
@@ -37,11 +36,12 @@ const EditBook = ({match})=> {
   const submit = async (e) => {
     e.preventDefault()
     axios.put(`/api/bookrouter/editbook/${id}`, items,
-      {
+    {
       validateStatus: function (status) {
       return status < 600; // Reject only if the status code is greater than or equal to 500
       }}
     )
+    .then(response => response.json())
     .catch(function (error) {
       console.log(error)
     })  
@@ -170,11 +170,9 @@ const EditBook = ({match})=> {
               name="category_id"
               onChange={handleInputChange}
             >
-              
             {categories.map((category, key) => 
               <option value={category.id}  key={key} >{category.title_category}</option>
             )}
-            
             </FormControl>  
           </Col> 
         </FormGroup>

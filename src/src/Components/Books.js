@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-
-import SwitchButton from './SwitchButton'; 
+import "./styles.css";
 import { useHistory } from "react-router-dom";
 import {Table} from 'reactstrap';
-import { Spinner,Button } from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faSearch,faCheckCircle} from '@fortawesome/free-solid-svg-icons'
+
 
 const Books = (props)=> {
 	const [books, setBook] = useState([]);
@@ -15,9 +15,11 @@ const Books = (props)=> {
 	const [counter, setCounter] = useState([]);
 	const [filtered ,setFilterd] = useState([]);
 	const [result , setResult] = useState("");
-	const [available , setAvailable] = useState({});
 	const history = useHistory()
 
+	// const handleClose = () => setShow(false);
+	// const handleShow = () => setShow(true);
+  
 	const fetchBook = async () => {
 		setShowLoading(true)
 		fetch('/api/bookrouter/')
@@ -26,7 +28,7 @@ const Books = (props)=> {
 				setShowLoading(false)
 				setBook(data)
 				setFilterd(data);//filter update of tiltes
-				// console.log(data)
+			
 			})
 			.catch(err => {
 				console.log(err)
@@ -47,21 +49,21 @@ const Books = (props)=> {
 		});
 	}
 
-	const deleteBook = async (id) => {
-		const delteUrl = '/api/bookrouter/delete/book/' + id;
+	// const deleteBook = async (id) => {
+	// 	const delteUrl = '/api/bookrouter/delete/book/' + id;
 
-		setShowLoading(true);
-		// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
+	// 	setShowLoading(true);
+	// 	// if (window.confirm(`Are you sure you want to delete "${book.title}"`)) {
 
-			axios.delete(delteUrl)
-			.then((result) => {  
-				props.history.push('/')  
-				console.log(result)
+	// 		axios.delete(delteUrl)
+	// 		.then((result) => {  
+	// 			props.history.push('/');
+	// 			console.log(result)
 
-			});
-		// }
+	// 		});
+	// 	// }
 		
-	}
+	// }
 
 
 	function getCount() {
@@ -80,19 +82,17 @@ const Books = (props)=> {
 	//componentDidMount? apres entrer 
 
 	useEffect(()=> {
-	const results = filtered.filter(res=> res.title.toLowerCase().includes(result)
+		const results = filtered.filter(res=> res.title.toLowerCase().includes(result)
 
-	); 
-	setBook(results)
+		); 
+		setBook(results)
 	} ,[result])
 	
 	const onChange =(e)=> {
 		setResult(e.target.value);
 	}
 
-	const bookAvailable = ()=> {
-		console.log('available ? yes : no')
-	}
+
 
 	useEffect(() => {
 		getCount();
@@ -100,14 +100,18 @@ const Books = (props)=> {
 	}, [])
 
 
+	
 	return (
-		<div className="books-home">
+		<div className="App">
+			{/* <SwitchButton /> */}
 			
 			{showLoading && <Spinner animation='border' role='status' >
 				<span className="sr-only">Chargement...</span>
 			</Spinner> } 
-			
-			{/* <SwitchButton /> */}
+		{/* {isLoading ? (
+			<Spinner />
+		) : (
+			 */}
 
 			<input 
 				type="text"
@@ -136,7 +140,7 @@ const Books = (props)=> {
 			Ajouter un livre
 			</Button>
 
-			{/* <SwitchButtons /> */}
+			
 
 			<h3>Il y a {counter} livres enregistrés. </h3>
 
@@ -160,16 +164,6 @@ const Books = (props)=> {
 				<tbody>
 					{books.map((book, key) => 
 						<tr key={key} className="">
-							<td>
-								<Button
-								variant="outline-default"
-								size="lg"
-								onClick={()=> {available(book.bookID)}}
-								>
-								<FontAwesomeIcon icon={faCheckCircle} />
-
-								</Button>
-							</td>
 							<td>{book.title}</td>
 							<td>{book.edition}</td>
 							<td>{book.author}</td>
@@ -195,13 +189,16 @@ const Books = (props)=> {
 								<FontAwesomeIcon icon={faSearch} />
 							</Button>
 			
-							<Button
-								style={{ whiteSpace: "pre" }}
-								variant="outline-danger"
-								size="sm"
-								onClick={()=> {deleteBook(book.bookID)}}
-							> X
-							</Button>
+						
+							{/* {!show && 
+								<button
+									onClick={openModal}
+								> X
+								</button>
+							}
+							<Modal closeModal={closeModal} show={show} /> */}
+
+							
 						</td>
 							
 					</tr>
@@ -210,12 +207,13 @@ const Books = (props)=> {
 					
 				</tbody>
 			</Table>
-
-
 		</div>
 	
 	)
 	 
 }
+
+
+	// {deleteBook(book.bookID)}
 
 export default Books;

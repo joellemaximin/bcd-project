@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models/bookborrowed_model");
-const pool = require("../middleware/dbConnect")
+const pool = require("../middleware/dbConnect");
 
 router.use(express.json());
 
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 // post router
 router.post("/", async (req, res) => {
   var postData  = req.body;
-  console.log(req.body)
+  // console.log(req.body);
   pool.query('INSERT INTO book_borrowed SET ?', postData, function (error, results, fields) {
     if (error) throw error;
     res.send(results);
@@ -44,33 +44,33 @@ router.get('/time-left-allbook/', async (req, res)=>{
 
     if (DateEmpruntCalcule <=  0) {
      // console.log(statusEmprunt)
-      statusEmprunt = 'Livre en retard'
+      statusEmprunt = 'Livre en retard';
       // console.log(DateEmpruntCalcule, + 'eafaeienfain')
-      res.send(result)
+      res.send(result);
     } 
 
     else if (DateEmpruntCalcule >= 3 ) {
       //console.log(statusEmprunt)
-      statusEmprunt = 'Le livre doit ëtre rendu dans moins de trois jours'
-      res.send(result)
+      statusEmprunt = 'Le livre doit ëtre rendu dans moins de trois jours';
+      res.send(result);
     }
 
     else if (DateEmpruntCalcule == 1){
 
-     console.log(statusEmprunt)
+     console.log(statusEmprunt);
      
-      statusEmprunt = 'Le livre doit ëtre rendu demain'
-      res.send(result)
+      statusEmprunt = 'Le livre doit ëtre rendu demain'; 
+      res.send(result);
     }
 
     else {
-      statusEmprunt = "cool"
+      statusEmprunt = "cool";
       //console.log(statusEmprunt)
-      res.send(result)
+      res.send(result);
 
     }
-  })
-})
+  });
+});
 
 //display books read by one student
 router.get("/student-books/:id", async (req, res) => {
@@ -79,10 +79,17 @@ router.get("/student-books/:id", async (req, res) => {
     if (err) throw err;
     res.send(result);
     console.log(result);
-  })
+  });
 }); 
 
-
+//delete books expired 0 and more
+router.delete("/api/bookborrowed/delete/old-books", async (req,res) =>{
+  pool.query('DELETE books.* FROM books LEFT JOIN `book_borrowed` ON `book_borrowed`.book_id = books.`bookID` and NOW() >= `book_borrowed`.start_date and NOW() <= `book_borrowed`.`returned_at` WHERE `book_borrowed`.id is null', [req.params.id], (error, results, fields) =>{
+    if (error) throw error;
+    console.log(error)
+    res.send(results);
+  });
+})
 
 
 

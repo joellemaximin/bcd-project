@@ -18,7 +18,6 @@ const AddBook = (props) => {
   const [inputs, setInputs] = useState(
     {title: '', collection: '', author: '', oeuvre: '', editor: ''}
   );
-  //  title_category: '', , category_id: ''
   const [categories, setCategory] = useState([]);
 
 
@@ -27,7 +26,7 @@ const AddBook = (props) => {
     setInputs({
       ...inputs,
       [event.target.name]: event.target.value});
-  }
+  };
 
   const addBook = async (e) => {
     e.preventDefault()
@@ -38,7 +37,7 @@ const AddBook = (props) => {
       }}
     )
     .catch(function (error) {
-      console.log(error)
+      console.log(error);
     })  
     .then(function (response) {
       props.history.push('/')
@@ -53,12 +52,12 @@ const AddBook = (props) => {
       fetch('/api/categories')
 				.then(res => res.json())
 				.then(data => {
-          setShowLoading(false)
+          setShowLoading(false);
           // console.log(data)
-					setCategory(data)
+					setCategory(data);
 				})
 				.catch(err => {
-					console.log(err)
+					console.log(err);
 				})
 		}
 		fetchCategories();

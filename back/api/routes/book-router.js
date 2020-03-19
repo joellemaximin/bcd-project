@@ -37,10 +37,11 @@ router.get('/show-book/:id', async (req, res) => {
 });
 
 
-router.put('/editbook/:id', async (req, res) => {
+router.put('/show-book/:id', async (req, res) => {
   const putData = req.body;
   pool.query('UPDATE books SET ? WHERE bookID = ?',[putData, req.params.id], function(error, results, fields) {
     if (error) throw error;
+    console.log(results)
     res.send(results);
   });
 });
@@ -59,15 +60,22 @@ router.delete('/delete/book/:id', (req, res) => {
   });
 });
 
+router.get("/books-left", async (req,res) => {
+  const booksLeft = 'SELECT books.* FROM books LEFT JOIN `book_borrowed` ON `book_borrowed`.book_id = books.`bookID` and NOW() >= `book_borrowed`.start_date and NOW() <= `book_borrowed`.`returned_at` WHERE `book_borrowed`.id is null';
+  pool.query(booksLeft, function (err, result){
+    if (err) throw err;
+    res.send(result);
+  });
+
+})
+
 
 //display count books
 router.get("/counter/countBooks", async (req,res) => {
-  const countBooks = 'SELECT COUNT(*) as total FROM books ';
+  const countBooks = 'SELECT COUNT(*) as total FROM books';
   pool.query(countBooks, function (err, result){
     if (err) throw err;
     res.json(result[0].total);
-
-
   });
 
 })
@@ -120,18 +128,18 @@ router.get('/order/author', async (req, res)=>{
 
 //matched any characters from title column from a to z
 
-router.get(`/search?`, async (req, res)=>{
-  //const matched_character = 'select bookID, title from books where title like "%' + [req.params.title] + '%"';
-  // console.log(query)
-  const matched_character = 'select title from books where title LIKE "?%" ';
-  pool.query(matched_character, function (err, result){
-    if (err) throw err;
+// router.get(`/search?`, async (req, res)=>{
+//   //const matched_character = 'select bookID, title from books where title like "%' + [req.params.title] + '%"';
+//   // console.log(query)
+//   const matched_character = 'select title from books where title LIKE "?%" ';
+//   pool.query(matched_character, function (err, result){
+//     if (err) throw err;
     
-    JSON.stringify(result);
-    res.send({ books: result });
+//     JSON.stringify(result);
+//     res.send({ books: result });
 
-  });
-})
+//   });
+// })
 
 
 // paginate router?
