@@ -14,13 +14,6 @@ function find() {
 }
 
 
-//find a book by id
-// function findById(bookID) {
-//   return db("books")
-//     .where({ bookID })
-//     .first();
-// }
-
 
 //remove from db
 function remove(bookID) {
