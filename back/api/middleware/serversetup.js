@@ -29,23 +29,18 @@ module.exports = server => {
     config.secret.cookie.secure = true // serve secure cookies
   }
   
-  // server.use(session(config))
   
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
-  // server.use(session({
-  //   secret: 'keyboard cat',
-  //   resave: false,
-  //   saveUninitialized: true,
-  //   cookie: { secure: true }
-  // }))
+
+
   server.use(express.static(path.join(__dirname, 'build')))
 
   server.use("/api/bookrouter", bookRouter);
   server.use("/api/students", studentRouter);
   server.use("/api/categories", cateRouter);
   server.use("/api/bookborrowed", book_borrowed);
-  server.use("/admin", userRouter);
+  server.use("/auth-admin", userRouter);
 
   // catch 404 and forward to error handler
 

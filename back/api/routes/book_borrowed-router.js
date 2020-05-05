@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models/bookborrowed_model");
 const pool = require("../middleware/dbConnect");
+const verified = require('../middleware/verifymytoken')
 
 router.use(express.json());
 
@@ -80,7 +81,7 @@ router.get("/", async (req, res) => {
 });
 
 
-router.post("/", async (req, res) => {
+router.post("/", verified, async (req, res) => {
   var postData  = req.body;
   console.log(req.body)
   pool.query('INSERT INTO book_borrowed SET ?', postData, function (error, results, fields) {
@@ -145,7 +146,7 @@ router.get("/student-books/:id", async (req, res) => {
 }); 
 
 //delete books expired 0 and more
-router.delete("/delete/old-books/", async (req,res) =>{
+router.delete("/delete/old-books/", verified, async (req,res) =>{
   pool.query('DELETE books.* FROM books LEFT JOIN `book_borrowed` ON `book_borrowed`.book_id = books.`bookID` and NOW() >= `book_borrowed`.start_date and NOW() <= `book_borrowed`.`returned_at` WHERE `book_borrowed`.id is null', [req.params.id], (error, results, fields) =>{
     if (error) throw error;
     console.log(error)
@@ -154,7 +155,7 @@ router.delete("/delete/old-books/", async (req,res) =>{
 })
 
 //delete book expired 0 and more
-router.delete("/delete/this-book/:id", async (req,res) =>{
+router.delete("/delete/this-book/:id",  verified, async (req,res) =>{
   pool.query('DELETE FROM book_borrowed WHERE id = ?', [req.params.id], (error, results, fields) =>{
     if (error) throw error;
     console.log(error)

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models/book-model");
 const pool = require("../middleware/dbConnect")
-
+const verified = require('../middleware/verifymytoken')
 router.use(express.json());
 
 // returns book in order by category and display only 15 books
@@ -16,7 +16,7 @@ router.get("/", async (req,res) => {
 });
 
 // post router
-router.post("/", async (req, res) => {
+router.post("/", verified, async (req, res) => {
   var postData  = req.body;
   console.log(req.body)
   pool.query('INSERT INTO books SET ?', postData, function (error, results, fields) {
@@ -37,7 +37,7 @@ router.get('/show-book/:id', async (req, res) => {
 });
 
 
-router.put('/show-book/:id', async (req, res) => {
+router.put('/show-book/:id',  verified, async (req, res) => {
   const putData = req.body;
   pool.query('UPDATE books SET ? WHERE bookID = ?',[putData, req.params.id], function(error, results, fields) {
     if (error) throw error;
@@ -50,7 +50,7 @@ router.put('/show-book/:id', async (req, res) => {
 //  pool.query(`UPDATE books SET title="", author="", category_id="" WHERE bookID=?`, [title,author,category_id], function(error, results, fields) {
 
 //remove a book
-router.delete('/delete/book/:id', (req, res) => {
+router.delete('/delete/book/:id',  verified, (req, res) => {
   pool.query('DELETE FROM books WHERE bookID = ?', [req.params.id], (err,rows, fields) =>{
     //console.log(req.params.id)
     if (!err) 

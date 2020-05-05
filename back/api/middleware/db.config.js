@@ -2,7 +2,10 @@ module.exports = {
     HOST: "127.0.01",
     USER: "root",
     PASSWORD: "",
-    DB: "bcd_managment"
+    DB: "bcd_managment",
+
+    secret: "bcdmelanielasserrekey"
+    
 };
 
 // module.exports = {

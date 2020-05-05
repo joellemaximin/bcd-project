@@ -3,7 +3,15 @@ const router = express.Router();
 const db = require("../models/auth-model");
 const pool = require("../middleware/dbConnect");
 const bcrypt = require('bcrypt');
+const dbConfig = require("../middleware/db.config");
+const jwt = require('jsonwebtoken')
+const verified = require('../middleware/verifymytoken')
+
 router.use(express.json());
+
+// var session = require('express-session');
+// const config = require('../middleware/config-session')
+// router.use(session(config));
 
 const {validationRegister, loginValidation} = require('../middleware/validation')
 
@@ -45,7 +53,7 @@ router.post("/register", async (req, res) => {
                 
                 pool.query('INSERT INTO users SET ?', user, function (error, results, fields) {
                     if (error) throw error;
-                    res.send(results);
+                    res.send({user: user.username});
                 }); 
             });
         }
@@ -56,47 +64,91 @@ router.post("/register", async (req, res) => {
 
 
 
-    })
-    
+    });
 
 });
-
 router.post('/login', (req, res)=> {
+// `  const password = req.body.password
+
+//     const { error } = validationRegister(req.body)
+//     if (error) return res.status(422).send(error.details[0].message );
+// `
     const email = req.body.email;
-    const password = req.body.password
 
     pool.query('SELECT * FROM users WHERE email = ?',[email], function (error, results, fields) {
         if (error) {
             res.json({
               status:false,
               message:'there are some error with query'
-              })
-        }else{
-          if(results.length >0){
-              if(password==results[0].password){
-                  res.json({
-                      status:true,
-                      message:'successfully authenticated'
-                  })
-              }else{
-                  res.json({
-                    status:false,
-                    message:"Email and password does not match"
-                   });
-              }
+            })
+        } else {
+            if(results.length > 0){
+                //decided to authen only with email
+                // if(password==results[0].password){
+                if(email == results[0].email){
+                    // res.json({
+                    //   status:true,
+                    //   message:'successfully authenticated'
+                    // })
+                    // console.log({id: results[0].id})
+
+
+                    const token = jwt.sign({ id: results[0].id },
+                    dbConfig.secret);
+
+                    res.cookie('t', token, {expiresIn: '20m'})
+
+                    // const refreshToken = jwt.sign(user, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife})
+
+                    // const response = {
+                    //     "status": "Logged in",
+                    //     "token": token,
+                    //     "refreshToken": refreshToken,
+                    // }
+                    // res.status(200).json(response);        
+
+                    res.status(200).send({
+
+                        email: email,
+                        accessToken: token
+                    })
+                    // res.header('auth-token', token)
+
+                    
+                } else {
+                    res.json({
+                        status:false,
+                        message:"Email does not match"
+                    });
+                    res.end();
+
+                }
            
-          }
-          else{
-            res.json({
-                status:false,    
-              message:"Email does not exits"
-            });
-          }
+            } else {
+                res.json({
+                    status:false,    
+                    message:"Email does not exits"
+                });
+                res.end();
+
+            }
         }
     });
     
 });
 
+
+router.get('/secret-route', verified, (req, res, next)=>{
+    console.log(req.user, 'id, time');
+    console.log(req.body)
+    res.send('This is the secret content. Only logged in users can see that!');
+    //copie colle access-token after login
+})
+
+router.post('/secret-route/logout', verified, (req, res) => {
+    res.clearCookie('t');
+    res.json({message: "Signout successful"});
+});
 
 module.exports = router;
 

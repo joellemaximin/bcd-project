@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models/cate-model");
+const verified = require('../middleware/verifymytoken')
 
 router.use(express.json());
 
 // returns cate in order
-router.get("/", async (req, res) => {
+router.get("/", verified, async (req, res) => {
   try {
     const cate = await db.find();
 
@@ -25,7 +26,7 @@ router.get("/", async (req, res) => {
 });
 
 // post router
-router.post("/", async (req, res) => {
+router.post("/", verified, async (req, res) => {
   try {
     const cate = await db.add(req.body);
     res.status(200).json({message: "New category " + cate.title + " add2"});
@@ -36,7 +37,7 @@ router.post("/", async (req, res) => {
 });
 
 //get one cate
-router.get('/:id', async (req, res) => {
+router.get('/:id', verified, async (req, res) => {
   try {
     const cate = await db.findById(req.params.id);
     if(cate) {
@@ -50,7 +51,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //update a cate
-router.put('/edit-cat/:id', async (req, res) => {
+router.put('/edit-cat/:id', verified, async (req, res) => {
   try {
       const cate = await db.update(req.params.id);
       if(cate) {
