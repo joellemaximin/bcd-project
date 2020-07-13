@@ -86,13 +86,6 @@ router.post('/login', (req, res)=> {
                 //decided to authen only with email
                 // if(password==results[0].password){
                 if(email == results[0].email){
-                    // res.json({
-                    //   status:true,
-                    //   message:'successfully authenticated'
-                    // })
-                    // console.log({id: results[0].id})
-
-
                     const token = jwt.sign({ id: results[0].id },
                     dbConfig.secret);
 
@@ -145,18 +138,9 @@ router.get('/secret-route', verified, (req, res, next)=>{
     //copie colle access-token after login
 })
 
-router.post('/secret-route/logout', verified, (req, res) => {
+router.post('/logout', (req, res) => {
     res.clearCookie('t');
     res.json({message: "Signout successful"});
 });
 
 module.exports = router;
-
-// For the new version
-
-// const schema = Joi.object({ name: Joi.string() .min(6) .required(),
-// email: Joi.string() .min(6) .required() .email(),
-// password: Joi.string() .min(6) .required() });
-
-// const validation = schema.validate(req.body); 
-// res.send(validation);

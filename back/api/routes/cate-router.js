@@ -6,7 +6,7 @@ const verified = require('../middleware/verifymytoken')
 router.use(express.json());
 
 // returns cate in order
-router.get("/", verified, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const cate = await db.find();
 
@@ -26,7 +26,7 @@ router.get("/", verified, async (req, res) => {
 });
 
 // post router
-router.post("/", verified, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const cate = await db.add(req.body);
     res.status(200).json({message: "New category " + cate.title + " add2"});

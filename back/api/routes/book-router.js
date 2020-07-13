@@ -16,7 +16,7 @@ router.get("/", async (req,res) => {
 });
 
 // post router
-router.post("/", verified, async (req, res) => {
+router.post("/", async (req, res) => {
   var postData  = req.body;
   console.log(req.body)
   pool.query('INSERT INTO books SET ?', postData, function (error, results, fields) {
@@ -37,8 +37,9 @@ router.get('/show-book/:id', async (req, res) => {
 });
 
 
-router.put('/show-book/:id',  verified, async (req, res) => {
+router.put('/show-book/:id', async (req, res) => {
   const putData = req.body;
+  console.log(putData)
   pool.query('UPDATE books SET ? WHERE bookID = ?',[putData, req.params.id], function(error, results, fields) {
     if (error) throw error;
     console.log(results)
@@ -50,7 +51,7 @@ router.put('/show-book/:id',  verified, async (req, res) => {
 //  pool.query(`UPDATE books SET title="", author="", category_id="" WHERE bookID=?`, [title,author,category_id], function(error, results, fields) {
 
 //remove a book
-router.delete('/delete/book/:id',  verified, (req, res) => {
+router.delete('/delete/book/:id', (req, res) => {
   pool.query('DELETE FROM books WHERE bookID = ?', [req.params.id], (err,rows, fields) =>{
     //console.log(req.params.id)
     if (!err) 

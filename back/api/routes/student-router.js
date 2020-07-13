@@ -8,7 +8,7 @@ const verified = require('../middleware/verifymytoken')
 router.use(express.json());
 
 // returns student in order
-router.get("/", verified, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const student = await db.find();
     res.status(200).json(student);
@@ -22,7 +22,7 @@ router.get("/", verified, async (req, res) => {
 
 
 // post router
-router.post("/", verified, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const student = await db.add(req.body);
     res.status(200).json(student);
@@ -32,7 +32,7 @@ router.post("/", verified, async (req, res) => {
 });
 
 //get one student
-router.get('/student/:id', verified, async (req, res) => {
+router.get('/student/:id', async (req, res) => {
   const selectBookId = 'SELECT * FROM students WHERE id = ?';
   pool.query(selectBookId, [req.params.id], function (err, result){
     if (err) throw err;
@@ -41,7 +41,7 @@ router.get('/student/:id', verified, async (req, res) => {
   })
 });
 
-router.get('/show-student/:id', verified, async (req, res) => {
+router.get('/show-student/:id', async (req, res) => {
   try {
     const student = await db.findById(req.params.id);
     if(student) {
@@ -56,7 +56,7 @@ router.get('/show-student/:id', verified, async (req, res) => {
 
 
 //update a student
-router.put('/edit-student/:id', verified, async (req, res) => {
+router.put('/edit-student/:id', async (req, res) => {
  
   const putData = req.body;
   pool.query('UPDATE students SET ? WHERE id = ? ', [putData, req.params.id], function(error, results, fields) {
@@ -67,7 +67,7 @@ router.put('/edit-student/:id', verified, async (req, res) => {
 });
   
 //remove a student
-router.delete('/delete/:id', verified, async (req, res, next) => {
+router.delete('/delete/:id', async (req, res, next) => {
   pool.query('DELETE FROM students WHERE id = ?', [req.params.id], (err,rows, fields) =>{
     console.log(req.params.id, 'id')
     if (!err)
@@ -92,7 +92,7 @@ router.delete('/delete/:id', verified, async (req, res, next) => {
 
   
 //display countStudents students
-router.get("/counter/countStudents", verified, async (req,res) => {
+router.get("/counter/countStudents", async (req,res) => {
     const countStudents = 'SELECT COUNT(*) as total FROM Students';
     pool.query(countStudents, function (err, result){
       if (err) throw err;
@@ -106,7 +106,7 @@ router.get("/counter/countStudents", verified, async (req,res) => {
 
 //display students by name or grade
 
-router.get('/order/order_by_name', verified, async (req, res)=>{
+router.get('/order/order_by_name', async (req, res)=>{
     const order_name = 'SELECT name, grade FROM Students ORDER BY name';
     pool.query(order_name, function (err, result){
       if (err) throw err;

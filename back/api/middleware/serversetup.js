@@ -6,6 +6,7 @@ const pool = require("./dbConnect")
 const bodyParser = require('body-parser')
 const path = require('path')
 const config = require("./db.config.js");
+require('dotenv').config();
 
 // routers
 
@@ -23,18 +24,32 @@ module.exports = server => {
   server.use(express.json());
   server.use(cors());
   server.use(morgan("dev"));
-  // server.use(express.urlencoded({ extended: true }));
-  if (server.get('env') === 'production') {
-    server.set('trust proxy', 1) // trust first proxy
-    config.secret.cookie.secure = true // serve secure cookies
-  }
-  
-  
+  server.use(express.urlencoded({ extended: true }));
+  // if (server.get('env') === 'production') {
+  //   server.set('trust proxy', 1) // trust first proxy
+  //   config.secret.cookie.secure = true // serve secure cookies
+  // }
+
+console.log("env ", process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, 'client/build')));
+	app.get('*', function(req, res) {
+	  res.sendFile(path.join(__dirname, 'client', 'build'));
+	});
+}
+if (process.env.NODE_ENV === 'development') {
+	app.use(express.static(path.join(__dirname, 'client/build')));
+	app.get('*', function(req, res) {
+	  res.sendFile(path.join(__dirname, 'client', 'build'));
+	});
+}
+
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
 
 
-  server.use(express.static(path.join(__dirname, 'build')))
+  // server.use(express.static(path.join(__dirname, 'client', 'build')))
 
   server.use("/api/bookrouter", bookRouter);
   server.use("/api/students", studentRouter);

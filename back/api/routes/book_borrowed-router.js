@@ -81,7 +81,7 @@ router.get("/", async (req, res) => {
 });
 
 
-router.post("/", verified, async (req, res) => {
+router.post("/", async (req, res) => {
   var postData  = req.body;
   console.log(req.body)
   pool.query('INSERT INTO book_borrowed SET ?', postData, function (error, results, fields) {
@@ -138,7 +138,7 @@ router.get('/time-left-allbook', async (req, res)=>{
 //display books read by one student
 router.get("/student-books/:id", async (req, res) => {
   const getBooksByStudent = 'select books.title from book_borrowed JOIN books ON books.bookID = book_borrowed.book_id WHERE book_borrowed.student_id = ? ';
-  pool.query(getBooksByStudent, [req.params.id],function (err, result){
+  pool.query(getBooksByStudent, [req.params.id], function (err, result){
     if (err) throw err;
     res.send(result);
     console.log(result);

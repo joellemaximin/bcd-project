@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 require('dotenv').config()
-const dbConfig = require("./db.config.js");
+const dbConfig = require("./db.config");
 
 const pool = mysql.createConnection({
     connectionLimit: 10,
